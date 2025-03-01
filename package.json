@@ -1,0 +1,64 @@
+{
+  "name": "nekoBot",
+  "version": "1.7.0",
+  "description": "- WhatsApp bot using Library Baileys",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Axel/nekoBot.git"
+  },
+  "keywords": [
+    "botwa",
+    "not_button",
+    "case_plugins"
+  ],
+  "author": "Axel_Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Axel/nekoBot/issues"
+  },
+  "homepage": "https://github.com/Axel/nekoBot#readme",
+  "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.1",
+    "acrcloud": "^1.4.0",
+    "archiver": "^7.0.1",
+    "async-lock": "^1.4.1",
+    "awesome-phonenumber": "^2.73.0",
+    "baileys": "github:kangfarrel/felzar-Baileys",
+    "canvas": "^2.11.2",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.0.0",
+    "chokidar": "^4.0.1",
+    "fake-useragent": "^1.0.1",
+    "fluent-ffmpeg": "^2.1.3",
+    "hls-parser": "^0.13.5",
+    "hls.js": "^1.5.20",
+    "javascript-obfuscator": "^4.1.1",
+    "jimp": "^0.16.13",
+    "js-beautify": "^1.15.1",
+    "jsdom": "^25.0.1",
+    "json5": "^2.2.3",
+    "jsonc-parser": "^3.3.1",
+    "link-preview-js": "^3.0.12",
+    "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.46",
+    "node-cron": "^3.0.3",
+    "node-fetch": "npm:undici@^6.21.0",
+    "node-hls": "^1.0.9",
+    "node-webpmux": "^3.2.0",
+    "pdfkit": "^0.16.0",
+    "pino": "^9.5.0",
+    "qs": "^6.13.1",
+    "sharp": "^0.32.6",
+    "undici": "^6.21.0",
+    "wa-sticker-formatter": "^4.4.4",
+    "yt-search": "^2.12.1",
+    "ytdl-core": "npm:@distube/ytdl-core@^4.16.4"
+  }
+}

@@ -63,7 +63,7 @@ module.exports = {
         const countdownIdulFitri = idulFitriDate.diff(now, "days");
 
         const header = `☘️ *N E K O – B O T*
-👋 Hai nama saya NekoBot saya adalah asisten bot WhatsApp 
+👋 Hai nama saya MchaX-Bot saya adalah asisten bot WhatsApp 
 yang akan membantu anda dengan fitur yang sediakan !
 ─────────────────────────
 📆 *Hitungan Mundur:*
@@ -77,7 +77,7 @@ yang akan membantu anda dengan fitur yang sediakan !
 *hubungi developer bot.*
 💻 *Script bot:* https://github.com/krsna081/mchaxBot
 🤖 *Didukung oleh WhatsApp*
-🌐 *Saluran WhatsApp NekoBot :*
+🌐 *Saluran WhatsApp MchaX-Bot :*
 https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J
 
 > 💬 *Fitur Limit*: 🥈
@@ -127,7 +127,7 @@ ${commands.command.map((command, index) => `> *(${index + 1})* ${m.prefix + comm
                 contextInfo: {
                     mentionedJid: sock.parseMention(caption),
                     externalAdReply: {
-                        title: "© NekoBot | Playground",
+                        title: "© MchaX-Bot | Playground",
                         body: "👨‍💻 Bot WhatsApp - Simple",
                         mediaType: 1,
                         sourceUrl: "https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J",
@@ -171,7 +171,7 @@ ${matches.map((a, i) => `> *(${i + 1})* ${m.prefix + a}`).join("\n")}
                 contextInfo: {
                     mentionedJid: sock.parseMention(caption),
                     externalAdReply: {
-                        title: "© NekoBot | Playground",
+                        title: "© MchaX-Bot | Playground",
                         body: "👨‍💻 Bot WhatsApp - Simple",
                         mediaType: 1,
                         sourceUrl: "https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J",
@@ -221,7 +221,7 @@ ${list.command
                 contextInfo: {
                     mentionedJid: sock.parseMention(caption),
                     externalAdReply: {
-                        title: "© NekoBot | Playground",
+                        title: "© MchaX-Bot | Playground",
                         body: "👨‍💻 Bot WhatsApp - Simple",
                         mediaType: 1,
                         sourceUrl: "https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J",
@@ -291,7 +291,7 @@ ${list.command
                         isForwarded: true,
                         externalAdReply: {
                             mediaType: 1,
-                            title: "© NekoBot | Playground",
+                            title: "© MchaX-Bot | Playground",
                             body: "👨‍💻 Bot WhatsApp - Simple",
                             thumbnailUrl: "https://files.catbox.moe/7365tv.jpg",
                             sourceUrl: "https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J",

@@ -31,7 +31,6 @@ const config = {
     fgif: { key: { participant: "0@s.whatsapp.net" }, message: { videoMessage: { title: "© MchaX-Bot | Playground", seconds: 359996400, gifPlayback: true, caption: "© MchaX-Bot | Playground" } } },
     fgclink: { key: { participant: "0@s.whatsapp.net", remoteJid: "0@s.whatsapp.net" }, message: { groupInviteMessage: { groupJid: "1203xxxx@g.us", inviteCode: "m", groupName: "© MchaX-Bot | Playground", caption: `Lihat Undangan` } } },
     fsaluran: { key : { remoteJid: '0@s.whatsapp.net', participant : '0@s.whatsapp.net' }, message: { newsletterAdminInviteMessage: { newsletterJid: "1203xxxx@newsletter", newsletterName: "© MchaX-Bot | Playground", caption: "© MchaX-Bot | Playground" } } },
-    fswtag: { key: {  fromMe: false, participant: "0@s.whatsapp.net" }, message: { groupStatusMentionMessage: { message: { protocolMessage: { key: m.key,  type: 25 } } } } },
     fvideo: { key: { fromMe: false, participant: "0@s.whatsapp.net" }, message: { videoMessage: { title: "© MchaX-Bot | Playground", seconds: 359996400, caption: "© MchaX-Bot | Playground" } } },
     floc: { key: { participant: "0@s.whatsapp.net" }, message: { locationMessage: { name: "© MchaX-Bot | Playground" } } },
     fkontak: { key: { participant: "0@s.whatsapp.net" }, message: { contactMessage: { displayName: "© MchaX-Bot | Playground", vcard: "BEGIN:VCARD\nVERSION:3.0\nN:XL;Krisnoll;;;\nFN:Krisnoll\nEND:VCARD" } } },

@@ -145,7 +145,7 @@ Terima kasih kepada mereka yang berkontribusi dalam pengembangan **MchaX-Bot**:
 Jika ingin mengenal seputar Script ini lebih dalam lagi
 silahkan mampir ke komunitas kami
 
-[![WhatsApp Group](https://img.shields.io/badge/WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/DRnyflOHxnT1LXY4lmvZ89)
+[![WhatsApp Group](https://img.shields.io/badge/WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/Kk4OfajNSAQB6Oq3LrKF41)
 
 [![WhatsApp channel](https://img.shields.io/badge/WhatsApp%20Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J)
 

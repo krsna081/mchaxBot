@@ -2,7 +2,7 @@ const fs = require("fs");
 
 module.exports = {
   command: "store",
-  alias: [""],
+  alias: [],
   category: ["group"],
   settings: {
     admin: true,
@@ -34,9 +34,8 @@ module.exports = {
         message: m.quoted.message,
         sender: m.sender
     };
-
-    // --delete
-    else if (text.includes("--delete")) {
+    
+    } else if (text.includes("--delete")) {
       let input = text.replace("--delete", "").trim();
       if (!input) throw `> Silakan masukkan nama atau nomor pesan yang ingin kamu hapus.`;
 

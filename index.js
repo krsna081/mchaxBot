@@ -140,20 +140,11 @@
     const { state, saveCreds } = await useMultiFileAuthState(config.sessions);
     const sock = simple(
       {
-        logger: logger,
+        logger: pino({ level: "silent" }),
         printQRInTerminal: false,
-        auth: {
-          creds: state?.creds,
-          keys: makeCacheableSignalKeyStore(state?.keys, logger.child({
-            level: "silent",
-            stream: "store"
-            }))
-        },
+        auth: state,
         version: [2, 3000, 1019441105],
         browser: Browsers.ubuntu("Edge"),
-        markOnlineOnConnect: true,
-        generateHighQualityLinkPreview: true,
-        defaultQueryTimeoutMs: undefined,
         maxMsgRetryCount: 15,
         getMessage: async (key) => {
           const jid = jidNormalizedUser(key.remoteJid);
@@ -165,6 +156,7 @@
           return !!msg.syncType;
         },
       },
+      store,
     );
     store.bind(sock.ev);
     if (!sock.authState.creds.registered) {

@@ -7,7 +7,7 @@ module.exports = {
   description: "📜 Dapatkan Script Bot Secara Gratis",
   async run(m, { sock, Func }) {
     let data = await axios
-      .get("https://api.github.com/repos/AxellNetwork/NekoBot")
+      .get("https://api.github.com/repos/krsna081/mchaxBot")
       .then((a) => a.data);
 
     let cap = "*– 乂 Informasi - Script Bot*\n\n";

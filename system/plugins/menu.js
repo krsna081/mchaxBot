@@ -75,7 +75,7 @@ yang akan membantu anda dengan fitur yang sediakan !
         const footer = `
 📢 *Jika Anda menemui masalah*
 *hubungi developer bot.*
-💻 *Script bot:* https://github.com/krsna081/botwa
+💻 *Script bot:* https://github.com/krsna081/mchaxBot
 🤖 *Didukung oleh WhatsApp*
 🌐 *Saluran WhatsApp NekoBot :*
 https://whatsapp.com/channel/0029VaOQ0f3BA1f7HHV9DV1J

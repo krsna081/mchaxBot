@@ -16,12 +16,23 @@ module.exports = async (m, sock, store) => {
   } catch (e) {
      console.log(e);
   };
+
   await db.main(m);
   if (m.isBot) return;
   if (db.list().settings.online) sock.readMessages([m.key]);  
   if (db.list().settings.self && !m.isOwner) return;
   if (m.isGroup && db.list().group[m.cht]?.mute && !m.isOwner) return;
-      
+
+  if (m.isGroup) {
+      db.list().group[m.cht].totalpesan[m.sender] = db.list().group[m.cht].totalpesan[m.sender] || { member: m.sender, chat: 0 };
+      db.list().group[m.cht].totalpesan[m.sender].chat += 1;
+  }
+
+  if (m.isOwner) {
+      db.list().user[m.sender].premium = { status: true, expired: 99999 };
+      db.list().user[m.sender].limit = 99999;
+  }
+
   if (Object.keys(store.groupMetadata).length === 0) {
     store.groupMetadata = await sock.groupFetchAllParticipating();
   }
@@ -34,6 +45,14 @@ module.exports = async (m, sock, store) => {
   const usedPrefix = config.prefix.includes(m.prefix);
   const text = m.text;
   const isCmd = m.prefix && usedPrefix;
+
+  if (isPrems) {
+      db.list().user[m.sender].limit = 99999;
+  }
+
+  if (isCmd) {
+      db.list().user[m.sender].rpg.exp += Math.floor(Math.random() * 20) + 1;
+  }
 
   if (isCmd) {
     require("./case.js")(m,

@@ -1,7 +1,7 @@
 async function events(m, { sock, isPrems }) {
     if (!m.isGroup) return;
     if (m.isBot && m.fromMe) return;
-    if (m.mtype === 'reactionMessage') return;
+    if (m.type === 'reactionMessage') return;
     if (!isPrems) return;
 
     let msgs = db.list().group[m.cht].store;

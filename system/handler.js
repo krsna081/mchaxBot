@@ -179,7 +179,7 @@ module.exports = async (m, sock, store) => {
             text: caption
           })
         }
-        m.reply(error.message);
+        m.reply("*– 乂 *Error Terdeteksi* 📉*\n !*\n> Command gagal dijalankan karena terjadi error\n> Laporan telah terkirim kepada owner kami dan akan segera di perbaiki !");
       } else {
         m.reply(Func.jsonFormat(error));
       }

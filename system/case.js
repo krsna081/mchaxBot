@@ -69,6 +69,7 @@ module.exports = async (m,
     isBanned,
 ) => {
     const quoted = m.isQuoted ? m.quoted : m;
+    try {
     switch (m.command) {
     case "beautify": {
         if (!quoted.text) return m.reply("Masukan kode untuk dirapikan!");
@@ -757,6 +758,25 @@ ${list.map((a) => Object.entries(a).map(([a, b]) => `> *🔸 ${a.capitalize()}* 
         }
         break;
     }
+   } catch (error) {
+    if (error.name) {
+     for (let owner of config.owner) {
+       let jid = await sock.onWhatsApp(owner + "@s.whatsapp.net");
+        if (!jid[0].exists) continue;
+         let caption = "*– 乂 *Error Terdeteksi* 📉*\n"
+          caption += `> *-* Nama command : ${m.command}\n`
+          caption += `> *-* Lokasi File : ${name}`
+          caption += `\n\n${Func.jsonFormat(error)}`
+   
+          sock.sendMessage(owner + "@s.whatsapp.net", {
+          text: caption
+        })
+      }
+     m.reply("*– 乂 *Error Terdeteksi* 📉*\n !*\n> Command gagal dijalankan karena terjadi error\n> Laporan telah terkirim kepada owner kami dan akan segera di perbaiki !");
+    } else {
+      m.reply(Func.jsonFormat(error));
+    }
+  }
 };
 
 let file = require.resolve(__filename);

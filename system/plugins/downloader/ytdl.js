@@ -1,147 +1,114 @@
+const axios = require("axios");
 const yts = require("yt-search");
 
 module.exports = {
     command: "yt2",
-    alias: ["yt2"],
+    alias: [],
     category: ["downloader"],
-    settings: {
-        limit: true
-    },
+    settings: { limit: true },
     description: "Mendownload video atau audio dari YouTube",
-    async run(m, {
-        sock,
-        text,
-        config
-    }) {
-        if (!text) return m.reply(`╭──[❌ *Masukkan Input yang Valid* ]
-᎒⊸ Masukkan link YouTube atau cari video berdasarkan query.
-᎒⊸ Contoh: *${m.prefix}yt2 Lathi* atau *${m.prefix}yt2 https://youtu.be/abc123 1080p*
-╰────────────•`);
+    async run(m, { sock, text, config }) {
+        sock.yt2 = sock.yt2 || {};
 
-        let isUrl = text.startsWith("http");
-        let words = text.split(" ");
-        let possibleQuality = words[words.length - 1]; // Kata terakhir (cek apakah resolusi/bitrate)
-        let quality = null;
+        let isAudio = text.includes("--audio");
+        let isVideo = text.includes("--video");
 
-        if (/^\d+p$/i.test(possibleQuality)) {
-            quality = possibleQuality.replace("p", "");
-            words.pop();
-        } else if (/^\d+kbps$/i.test(possibleQuality)) {
-            quality = possibleQuality.replace("kbps", "");
-            words.pop();
-        }
+        // Menghapus flag --audio atau --video dari text
+        text = text.replace("--audio", "").replace("--video", "").trim();
 
-        let query = words.join(" ");
-        let videoUrl = isUrl ? query : null;
+        let videoUrl;
+        let videoData;
 
-        if (!isUrl) {
-            let search = await yts(query);
+        if (sock.yt2[m.sender] && sock.yt2[m.sender].url && text === sock.yt2[m.sender].url) {
+            // Jika pengguna menekan tombol, gunakan URL yang sudah ada
+            videoUrl = sock.yt2[m.sender].url;
+            videoData = sock.yt2[m.sender].metadata;
+        } else if (text.startsWith("http")) {
+            // Jika input adalah URL langsung
+            videoUrl = text;
+        } else {
+            // Jika input adalah pencarian
+            let search = await yts(text);
             if (!search.videos.length) return m.reply("❌ Video tidak ditemukan!");
-            videoUrl = search.videos[0].url; // Ambil video teratas
+            let result = search.videos[0];
+            videoUrl = result.url;
+            videoData = {
+                title: result.title,
+                author: result.author.name,
+                duration: result.timestamp,
+                thumb: result.thumbnail,
+            };
+
+            // Simpan URL dan metadata
+            sock.yt2[m.sender] = { url: videoUrl, metadata: videoData };
         }
 
-        let response = await axios.get(`https://ytdownloader.nvlgroup.my.id/info?url=${videoUrl}`);
-        let data = await response.data;
-        if (!data.title) return m.reply("❌ Video tidak ditemukan!");
+        let apiUrl = isAudio
+            ? `https://rest.cloudkuimages.xyz/api/download/ytmp3?url=${videoUrl}`
+            : `https://rest.cloudkuimages.xyz/api/download/ytmp4?url=${videoUrl}`;
+
+        let response = await axios.get(apiUrl);
+        let { download_url } = response.data;
+
+        // Fungsi untuk mendapatkan ukuran file manual
+        async function getFileSize(url) {
+            try {
+                let res = await axios.head(url);
+                return res.headers['content-length'] ? parseInt(res.headers['content-length'], 10) : 0;
+            } catch {
+                return 0;
+            }
+        }
+
+        let fileSize = await getFileSize(download_url);
+        let sizeText = fileSize ? (fileSize / (1024 * 1024)).toFixed(2) + " MB" : "Tidak diketahui";
 
         let infoMessage = `╭──[🎵 *YouTube - Downloader* ]\n` +
-            `᎒⊸ *📌 Judul:* ${data.title}\n` +
-            `᎒⊸ *📺 Channel:* ${data.uploader}\n` +
-            `᎒⊸ *⏳ Durasi:* ${data.duration}\n` +
+            `᎒⊸ *Judul*: ${videoData?.title || "Tidak diketahui"}\n` +
+            `᎒⊸ *Author*: ${videoData?.author || "Tidak diketahui"}\n` +
+            `᎒⊸ *Durasi*: ${videoData?.duration || "Tidak diketahui"}\n` +
+            `᎒⊸ *Ukuran*: ${sizeText}\n` +
+            `᎒⊸ *Link*: ${videoUrl}\n` +
             `╰────────────•`;
 
-        if (!quality) {
-            let videoOptions = data.resolutions.map(v => ({
-                title: `📹 ${v.height}p (${v.size})`,
-                command: `${m.prefix}yt2 ${videoUrl} ${v.height}p`,
-            }));
-
-            let audioOptions = data.audioBitrates.map(a => ({
-                title: `🎵 ${a.bitrate}kbps (${a.size})`,
-                command: `${m.prefix}yt2 ${videoUrl} ${a.bitrate}kbps`,
-            }));
-
-            let sections = [{
-                type: "list",
-                title: "Pilih Opsi",
-                value: [{
-                        headers: "📹 Pilih Resolusi Video",
-                        rows: videoOptions,
-                    },
-                    {
-                        headers: "🎵 Pilih Bitrate Audio",
-                        rows: audioOptions,
-                    },
-                ]
-            }]
-
-            return sock.sendButton(m.cht, sections, m, {
-                image: {
-                    url: data.thumbnail
-                },
+        if (!isAudio && !isVideo) {
+            return sock.sendMessage(m.cht, {
+                image: { url: videoData?.thumb || "https://i.imgur.com/YQJX5sG.png" },
                 caption: infoMessage,
                 footer: config.name,
-            })
+                buttons: [
+                    { buttonId: `.yt2 ${videoUrl} --audio`, buttonText: { displayText: "🎵 Download Audio" }, type: 1 },
+                    { buttonId: `.yt2 ${videoUrl} --video`, buttonText: { displayText: "📹 Download Video" }, type: 1 },
+                ],
+                headerType: 4,
+                viewOnce: true,
+            }, { quoted: m });
         }
 
-        let isAudio = !isNaN(quality) && text.includes("kbps");
-        let downloadUrl = isAudio ?
-            `https://ytdownloader.nvlgroup.my.id/audio?url=${videoUrl}&bitrate=${quality}` :
-            `https://ytdownloader.nvlgroup.my.id/download?url=${videoUrl}&resolution=${quality}`;
-
-        let fileType = isAudio ? "audio/mpeg" : "video/mp4";
-        let fileName = `${data.title}.${isAudio ? "mp3" : "mp4"}`;
-        let fileSize = isAudio ?
-            data.audioBitrates.find(a => a.bitrate == quality)?.size.replace(" MB", "") :
-            data.resolutions.find(v => v.height == quality)?.size.replace(" MB", "");
-
-        fileSize = parseFloat(fileSize) || 0;
-        let sendAsDocument = fileSize > 10;
-
-        return sock.sendMessage(m.cht, sendAsDocument ?
-            {
-                document: {
-                    url: downloadUrl
-                },
-                mimetype: fileType,
-                fileName,
-            } :
-            isAudio ?
-            {
-                audio: {
-                    url: downloadUrl
-                },
-                mimetype: "audio/mpeg",
+        if (fileSize > 10 * 1024 * 1024) {
+            return sock.sendMessage(m.cht, {
+                document: { url: download_url },
+                mimetype: isAudio ? "audio/mpeg" : "video/mp4",
+                fileName: `${videoData?.title || "video"}.${isAudio ? "mp3" : "mp4"}`,
+            }, { quoted: m });
+        } else {
+            return sock.sendMessage(m.cht, {
+                [isAudio ? "audio" : "video"]: { url: download_url },
+                mimetype: isAudio ? "audio/mpeg" : "video/mp4",
                 contextInfo: {
                     externalAdReply: {
                         mediaUrl: videoUrl,
                         mediaType: 2,
-                        title: data.title,
-                        body: "YouTube Audio",
-                        thumbnailUrl: data.thumbnail,
+                        title: videoData?.title || "YouTube Video",
+                        body: "YouTube Downloader",
+                        thumbnailUrl: videoData?.thumb || "https://i.imgur.com/YQJX5sG.png",
                         sourceUrl: videoUrl,
                         renderLargerThumbnail: true,
                     },
                 },
-            } :
-            {
-                video: {
-                    url: downloadUrl
-                },
-                mimetype: "video/mp4",
-                contextInfo: {
-                    externalAdReply: {
-                        mediaUrl: videoUrl,
-                        mediaType: 2,
-                        title: data.title,
-                        body: "YouTube Video",
-                        thumbnailUrl: data.thumbnail,
-                        sourceUrl: videoUrl,
-                        renderLargerThumbnail: true,
-                    },
-                },
-            }, {
-                quoted: m
-            });
+            }, { quoted: m });
+        }
+
+        setTimeout(() => delete sock.yt2[m.sender], 60000);
     },
 };

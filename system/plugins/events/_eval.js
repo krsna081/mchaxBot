@@ -19,10 +19,11 @@ async function events(
   },
 ) {
   if (
-    [">", "=>"].some((a) => m.command.toLowerCase().startsWith(a)) &&
+    [">", "x"].some((a) => m.command.toLowerCase().startsWith(a)) &&
     m.isOwner
   ) {
     let evalCmd = "";
+    await m.react("⚡");
     try {
       evalCmd = /await/i.test(m.text)
         ? eval("(async() => { " + m.text + " })()")
@@ -44,6 +45,7 @@ async function events(
     ["$"].some((a) => m.command.toLowerCase().startsWith(a)) &&
     m.isOwner
   ) {
+    await m.react("🚀");
     try {
       exec(m.text, async (err, stdout) => {
         if (err) return m.reply(util.format(err));

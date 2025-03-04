@@ -32,7 +32,6 @@ module.exports = {
         limit: true
     },
     description: "Membuat transcribe dari video YouTube menggunakan url!",
-    loading: true,
     async run(m, {
         sock,
         Func,
@@ -43,7 +42,7 @@ module.exports = {
         config
     }) {
         if (!text) return m.reply("Harap masukan link video YouTube untuk di transkripsi!");
-        if (Func.isUrl(text) && /youtube./.test(text)) {
+        if (Func.isUrl(text) && /(youtube\.com|youtu\.be)/.test(text)) {
             try {
                 m.reply("Sedang membuat ringkasan !");
                 const result = await transcribe(text);

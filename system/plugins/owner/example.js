@@ -9,13 +9,14 @@ module.exports = {
         text
     }) {
         const title = `*╭──[ 乂 Example - Code ]*`;
-        const message = `${title}\n᎒⊸ Pilih tipe *1* atau *2* sesuai kebutuhan Anda.\n╰────────────•`;
+        const message = `${title}\n᎒⊸ Pilih tipe *1*, *2*, & *3* sesuai kebutuhan Anda.\n╰────────────•`;
 
         if (!text) {
             return m.reply({
                 poll: {
                     name: message,
-                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`],
+                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`, `${m.prefix + m.command} 3`
+                    ],
                     selectableCount: 1,
                 },
             });
@@ -55,11 +56,26 @@ module.exports = {
     },
 };`;
             return m.reply(`*– 乂 Tipe 2 - Code*\n\`\`\`${code}\`\`\``);
+        } else if (option === 3) {
+            const code = `let mchax = async (m, { sock, Func, Scraper, Uploader, store, text, config }) => {
+        // Lakukan sesuatu di sini
+}
+
+mchax.command = ""
+mchax.alias = []
+mchax.category = []
+mchax.settings = { }
+mchax.description = ""
+mchax.loading = true
+
+module.exports = mchax`
+            return m.reply(`*– 乂 Tipe 3 - Code*\n\`\`\`${code}\`\`\``);
         } else {
             return m.reply({
                 poll: {
                     name: `${message}\n\n> ❌ Pilihan tidak valid, silakan pilih antara 1 atau 2.`,
-                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`],
+                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`, `${m.prefix + m.command} 3`
+                    ],
                     selectableCount: 1,
                 },
             });

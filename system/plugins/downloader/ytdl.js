@@ -67,8 +67,8 @@ module.exports = {
 
         try {
             let response = await fetchWithRetry(apiUrl);
-            let { download_url } = response;
-            if (!download_url) throw new Error("❌ Gagal mendapatkan URL download!");
+            let { metadata } = response;
+            if (!metadata) throw new Error("❌ Gagal mendapatkan URL download!");
 
             if (!videoData.title) {
                 videoData = {
@@ -88,7 +88,7 @@ module.exports = {
                 }
             }
 
-            let fileSize = await getFileSize(download_url);
+            let fileSize = await getFileSize(metadata.download_url);
             let sizeText = fileSize ? (fileSize / (1024 * 1024)).toFixed(2) + " MB" : "Tidak diketahui";
 
             let infoMessage = `╭──[🎵 *YouTube - Downloader* ]\n` +
@@ -115,13 +115,13 @@ module.exports = {
 
             if (fileSize > 10 * 1024 * 1024) {
                 return sock.sendMessage(m.cht, {
-                    document: { url: download_url },
+                    document: { url: metadata.download_url },
                     mimetype: isAudio ? "audio/mpeg" : "video/mp4",
                     fileName: `${videoData.title}.${isAudio ? "mp3" : "mp4"}`,
                 }, { quoted: m });
             } else {
                 return sock.sendMessage(m.cht, {
-                    [isAudio ? "audio" : "video"]: { url: download_url },
+                    [isAudio ? "audio" : "video"]: { url: metadata.download_url },
                     mimetype: isAudio ? "audio/mpeg" : "video/mp4",
                     contextInfo: {
                         externalAdReply: {

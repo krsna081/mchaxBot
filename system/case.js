@@ -71,10 +71,26 @@ module.exports = async (m,
     const quoted = m.isQuoted ? m.quoted : m;
     try {
     switch (m.command) {
-    case "beautify": {
+        case "toimg": {
+                if (!m.quoted) return m.reply(`> *Mohon balas pesan sticker!*`);
+                if (!/image|webp/.test(m.quoted.msg.mimetype)) return m.reply(`> *Mohon balas pesan sticker!*`);
+                try {
+                    sock.sendMessage(m.cht, {
+                        image: await m.quoted.download(),
+                        mimetype: "image/jpeg"
+                    }, {
+                        quoted: m
+                    })
+                } catch (e) {
+                    throw e;
+                }
+            }
+        break
+    case "beautify":
+    case "bft": {
         if (!quoted.text) return m.reply("Masukan kode untuk dirapikan!");
         try {
-           let data = require("js-beautify")(quoted.text);
+           let data = require("js-beautify")(quoted.body);
            m.reply(data);
         } catch (error) {
             await m.reply(util.format(error))
@@ -150,32 +166,33 @@ module.exports = async (m,
             }
             m.reply(`Spam selesai!`);
         }
-    break
-    case "jadibot": {
-                try {
-                    await jadibot(sock, m, m.sender)
-                } catch (error) {
-                    await m.reply(util.format(error))
-                }
+        break
+        case "jadibot": {
+           if (m.isGroup) return m.reply(config.messages.private);
+            try {
+                await jadibot(sock, m, m.sender)
+            } catch (error) {
+                await m.reply(util.format(error))
             }
-            break
-            case "stopjadibot": {
-                if (m.key.fromMe) return
-                try {
-                    await stopjadibot(sock, m, m.sender)
-                } catch (error) {
-                    await m.reply(util.format(error))
-                }
+        }
+        break
+        case "stopjadibot": {
+            if (m.key.fromMe) return
+            try {
+                await stopjadibot(sock, m, m.sender)
+            } catch (error) {
+                await m.reply(util.format(error))
             }
-            break
-            case "listjadibot": {
-                try {
-                    listjadibot(sock, m)
-                } catch (error) {
-                    await reply(util.format(error))
-                }
+        }
+        break
+        case "listjadibot": {
+            try {
+                listjadibot(sock, m)
+            } catch (error) {
+                await reply(util.format(error))
             }
-            break
+        }
+        break
         case "toanime": {
             let q = m.quoted ? m.quoted : m;
             let mime = (q.msg || q).mimetype || '';

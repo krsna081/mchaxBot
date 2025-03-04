@@ -128,8 +128,9 @@
   `));
   
   console.log(chalk.blue.bold("\n– 乂 🤖 Info Bot:"));
-  console.log(chalk.white.bold("  | GitHub: ") + chalk.cyan.bold("https://github.com/AxellNetwork"));
-  console.log(chalk.white.bold("  | Developer: ") + chalk.green.bold("AxellNetwork"));
+  console.log(chalk.white.bold("  | Base Sc: ") + chalk.cyan.bold("https://github.com/AxellNetwork/nekoBot"));
+  console.log(chalk.white.bold("  | GitHub: ") + chalk.cyan.bold("https://github.com/krsna081"));
+  console.log(chalk.white.bold("  | Developer: ") + chalk.green.bold("krizz"));
   console.log(chalk.white.bold("  | Status Server: ") + chalk.green.bold("Online"));
   console.log(chalk.white.bold("  | Versi: ") + chalk.magenta.bold(pkg.version));
   console.log(chalk.white.bold("  | Versi Node.js: ") + chalk.magenta.bold(process.version));
@@ -162,7 +163,7 @@
     if (!sock.authState.creds.registered) {
       console.log(
         chalk.white.bold(
-          "- Silakan masukkan nomor WhatsApp Anda, misalnya +628xxxx",
+          "- Silakan masukkan nomor WhatsApp Anda, misalnya 628xxxx",
         ),
       );
       const phoneNumber = await question(chalk.green.bold(`– Nomor Anda: `));
@@ -366,14 +367,14 @@
         const chatUpdate = cht.messages[0];
         if (!chatUpdate.message) return;    
         const userId = chatUpdate.key.id;
-            global.m = await serialize(chatUpdate, sock, store)
-            if (m.isBot) {
-               if (block_message.has(userId)) return;
-                block_message.add(userId);
-                setTimeout(() => block_message.delete(userId), 5 * 60 * 1000);
-            }
-            require("./lib/logger.js")(m);
-            await require("./system/handler.js")(m, sock, store);
+        global.m = await serialize(chatUpdate, sock, store)
+        if (m.isBot) {
+            if (block_message.has(userId)) return;
+            block_message.add(userId);
+            setTimeout(() => block_message.delete(userId), 5 * 60 * 1000);
+        }
+        require("./lib/logger.js")(m);
+        await require("./system/handler.js")(m, sock, store);
     });
 
     sock.ev.on("messages.update", async (chatUpdate) => {

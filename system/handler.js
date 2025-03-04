@@ -122,6 +122,9 @@ module.exports = async (m, sock, store) => {
           if (plugin.settings.group && !m.isGroup) {
             return m.reply(config.messages.group);
           }
+          if (plugin.settings.private && m.isGroup) {
+            return m.reply(config.messages.private);
+          }
           if (plugin.settings.admin && !isAdmin) {
             return m.reply(config.messages.admin);
           }

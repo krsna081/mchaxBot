@@ -26,6 +26,7 @@
   const pkg = require("./package.json");
   const NodeCache = require("node-cache");
   const moment = require("moment-timezone");
+  const canvafy = require("canvafy");
   const Func = require("./lib/function.js");
   const Uploader = require("./lib/uploader.js");
   const Queque = require("./lib/queque.js");
@@ -94,6 +95,7 @@
   global.fs = fs;
   global.cheerio = require("cheerio");
   global.block_message = new Set();
+  global.lastCall = new Map();
   global.groupCache = new NodeCache({stdTTL: 5 * 60, useClones: false});
   global.pickRandom = function pickRandom(list) {
      return list[Math.floor(Math.random() * list.length)];
@@ -144,9 +146,9 @@
         logger: pino({ level: "silent" }),
         printQRInTerminal: false,
         auth: state,
+        cachedGroupMetadata: async (jid) => groupCache.get(jid),
         version: [2, 3000, 1019441105],
         browser: Browsers.ubuntu("Edge"),
-        maxMsgRetryCount: 15,
         getMessage: async (key) => {
           const jid = jidNormalizedUser(key.remoteJid);
           const msg = await store.loadMessage(jid, key.id);
@@ -296,6 +298,8 @@
     sock.ev.on("groups.update", async (updates) => {
       for (const update of updates) {
         const id = update.id;
+        const metadata = await sock.groupMetadata[id];
+        groupCache.set(id, metadata);
         if (store.groupMetadata[id]) {
           store.groupMetadata[id] = {
             ...(store.groupMetadata[id] || {}),
@@ -306,7 +310,8 @@
     });
 
     sock.ev.on("group-participants.update", ({ id, participants, action }) => {
-      const metadata = store.groupMetadata[id];
+      const metadata = sock.groupMetadata[id];
+      groupCache.set(id, metadata);
       if (metadata) {
         switch (action) {
           case "add":
@@ -361,6 +366,25 @@
         conversation: "NekoBot",
       };
     }
+
+    sock.ev.on("call", async (calls) => {
+      if (!db.list().settings.anticall) return;
+      for (const call of calls) {
+        if (!call.id || !call.from) continue;
+    
+        let lastTime = lastCall.get(call.from);
+        let now = Date.now();
+    
+        if (!lastTime || now - lastTime > 5000) {
+          lastCall.set(call.from, now);
+          await sock.rejectCall(call.id, call.from);
+          await sock.sendMessage(call.from, {
+            text: "> 🚫 *Mohon maaf*... Kami tidak bisa menerima telepon dari Anda, anti call aktif!",
+            mentions: [call.from],
+          });
+        }
+      }
+    })
     
     sock.ev.on("messages.upsert", async (cht) => {
         if (cht.messages.length === 0) return;  

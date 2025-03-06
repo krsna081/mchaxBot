@@ -28,17 +28,11 @@ let yukio = async (m, {
                 mentionedJid: [m.sender],
                 isForwarded: !0,
                 forwardingScore: 127,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.id.newsletter,
-                    newsletterName: `${Func.Styles(`pushch || ${saluran.name}`)}`,
-                    serverMessageId: -1
-                },
                 externalAdReply: {
-                    title: `Pushch Oleh: ${m.pushName}`,
+                    title: `> PushCh by: ${m.pushName}`,
                     body: `${pkg.name} || Version: ` + pkg.version,
                     mediaType: 1,
                     thumbnailUrl: pp,
-                    sourceUrl: "https://www.tiktok.com/@krsna_081/",
                 }
             }
         })
@@ -50,11 +44,6 @@ let yukio = async (m, {
                 mentionedJid: [m.sender],
                 isForwarded: !0,
                 forwardingScore: 127,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.id.newsletter,
-                    newsletterName: `${Func.Styles(`pushch || ${saluran.name}`)}`,
-                    serverMessageId: -1
-                }
             }
         })
     } else if (/image/.test(quoted.msg.mimetype)) {
@@ -65,17 +54,11 @@ let yukio = async (m, {
                 mentionedJid: [m.sender],
                 isForwarded: !0,
                 forwardingScore: 127,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.id.newsletter,
-                    newsletterName: `${Func.Styles(`pushch || ${saluran.name}`)}`,
-                    serverMessageId: -1
-                },
                 externalAdReply: {
-                    title: `Pushch Oleh: ${m.pushName}`,
+                    title: `PushCh by: ${m.pushName}`,
                     body: `${pkg.name} || Version: ` + pkg.version,
                     mediaType: 1,
                     thumbnailUrl: pp,
-                    sourceUrl: "https://www.tiktok.com/@krsna_081/",
                 }
             }
         })
@@ -93,17 +76,11 @@ let yukio = async (m, {
                 mentionedJid: [m.sender],
                 isForwarded: !0,
                 forwardingScore: 127,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.id.newsletter,
-                    newsletterName: `${Func.Styles(`pushch || ${saluran.name}`)}`,
-                    serverMessageId: -1
-                },
                 externalAdReply: {
-                    title: `Pushch Oleh: ${m.pushName}`,
+                    title: `PushCh by: ${m.pushName}`,
                     body: `${pkg.name} || Version: ` + pkg.version,
                     mediaType: 1,
                     thumbnailUrl: pp,
-                    sourceUrl: "https://www.tiktok.com/@krsna_081/",
                 }
             }
         })
@@ -114,17 +91,11 @@ let yukio = async (m, {
                 mentionedJid: [m.sender],
                 isForwarded: !0,
                 forwardingScore: 127,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.id.newsletter,
-                    newsletterName: `${Func.Styles(`pushch || ${saluran.name}`)}`,
-                    serverMessageId: -1
-                },
                 externalAdReply: {
-                    title: `Pushch Oleh: ${m.pushName}`,
+                    title: `PushCh by: ${m.pushName}`,
                     body: `${pkg.name} || Version: ` + pkg.version,
                     mediaType: 1,
                     thumbnailUrl: pp,
-                    sourceUrl: "https://www.tiktok.com/@krsna_081/",
                 }
             }
         })

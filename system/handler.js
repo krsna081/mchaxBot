@@ -150,12 +150,12 @@ module.exports = async (m, sock, store) => {
           .then(async (a) => {
              if (plugin?.settings?.limit && !isPrems && !m.isOwner) {
                 let user = db.list().user[m.sender];
-                if (user.limit > 0) {
-                   user.limit -= 1;
+                if (user.limit > plugin.settings.limit) {
+                   user.limit -= plugin.settings.limit;
                    m.reply(
                       `> 💡 *Informasi:* Kamu telah menggunakan fitur limit\n> *- Limit kamu saat ini:* ${user.limit} tersisa ☘️\n> *- Catatan:* Limit akan direset pada pukul 02:00 WIB setiap harinya.`
                    );
-                   if (user.limit === 0) {
+                   if (user.limit === plugin.settings.limit) {
                       m.reply(
                          `⚠️ *Peringatan:* Limit kamu sudah habis! ❌\nSilakan tunggu hingga reset pukul 02:00 WIB atau beli limit tambahan.`
                       );

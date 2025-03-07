@@ -11,6 +11,7 @@ const cron = require("node-cron");
 const chalk = require("chalk");
 
 module.exports = async (m, sock, store) => {
+  const mchax = sock;
   try {
      require("../lib/system.js")(m, sock, store);
   } catch (e) {
@@ -57,6 +58,7 @@ module.exports = async (m, sock, store) => {
   if (isCmd) {
     require("./case.js")(m,
       sock,
+      mchax,
       config,
       text,
       Func,
@@ -90,6 +92,7 @@ module.exports = async (m, sock, store) => {
         if (
           plugin.events.call(sock, m, {
             sock,
+            mchax,
             Func,
             config,
             Uploader,
@@ -135,6 +138,7 @@ module.exports = async (m, sock, store) => {
 
         await plugin(m, {
           sock,
+          mchax,
           config,
           text,
           plugins: Object.values(pg.plugins).filter((a) => a.alias),

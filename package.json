@@ -11,19 +11,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Axel/nekoBot.git"
+    "url": "git+https://github.com/krsna081/mchaxBot.git"
   },
   "keywords": [
     "botwa",
     "not_button",
     "case_plugins"
   ],
-  "author": "Axel_Team",
+  "author": "Krizz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Axel/nekoBot/issues"
+    "url": "https://github.com/krsna081/mchaxBot/issues"
   },
-  "homepage": "https://github.com/Axel/nekoBot#readme",
+  "homepage": "https://github.com/krsna081/mchaxBot#readme",
   "dependencies": {
     "@vitalets/google-translate-api": "^9.2.1",
     "acrcloud": "^1.4.0",

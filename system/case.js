@@ -57,6 +57,7 @@ const {
         
 module.exports = async (m,
     sock,
+    mchax,
     config,
     text,
     Func,
@@ -71,6 +72,75 @@ module.exports = async (m,
     const quoted = m.isQuoted ? m.quoted : m;
     try {
     switch (m.command) {
+            case "ffstalk": {
+                if (!text) return m.reply("Masukkan ID Free Fire yang ingin dicari!");
+                try {
+                    let data = await Scraper.ffstalk(text);
+                    if (!data) return m.reply("Data tidak ditemukan atau ID tidak valid!");
+
+                    let message = `*🎮 Free Fire Stalk Result*\n`;
+                    message += `👤 *Nama:* ${data.name || "Tidak diketahui"}\n`;
+                    message += `📜 *Bio:* ${data.bio || "Tidak ada"}\n`;
+                    message += `❤️ *Like:* ${data.like || "0"}\n`;
+                    message += `🎚️ *Level:* ${data.level || "0"}\n`;
+                    message += `⭐ *EXP:* ${data.exp || "0"}\n`;
+                    message += `🌍 *Region:* ${data.region || "Tidak diketahui"}\n`;
+                    message += `🎖 *Honor Score:* ${data.honorScore || "0"}\n`;
+                    message += `🏆 *BR Rank:* ${data.brRank || "Tidak ada"} (${data.brRankPoint || "0"})\n`;
+                    message += `📆 *Akun Dibuat:* ${data.accountCreated || "Tidak diketahui"}\n`;
+                    message += `⏳ *Terakhir Login:* ${data.lastLogin || "Tidak diketahui"}\n`;
+                    message += `🗣️ *Bahasa:* ${data.language || "Tidak diketahui"}\n`;
+                    message += `🎟️ *Booyah Pass Premium:* ${data.booyahPassPremium || "Inactive"}\n\n`;
+
+                    if (data.petInformation) {
+                        message += `*🐾 Pet Information:*\n`;
+                        message += `- Nama: ${data.petInformation.name}\n`;
+                        message += `- Level: ${data.petInformation.level}\n`;
+                        message += `- EXP: ${data.petInformation.exp}\n`;
+                        message += `- Star Marked: ${data.petInformation.starMarked}\n`;
+                        message += `- Selected: ${data.petInformation.selected}\n\n`;
+                    }
+
+                    if (data.guild) {
+                        message += `*🏰 Guild:*\n`;
+                        message += `- Nama: ${data.guild.name}\n`;
+                        message += `- Level: ${data.guild.level}\n`;
+                        message += `- Anggota: ${data.guild.members}\n`;
+                        message += `- ID: ${data.guild.id}\n\n`;
+                    }
+
+                    await m.reply(message);
+
+                    if (data.equippedItems && data.equippedItems.length > 0) {
+                        let media = []
+                        for (let item of data.equippedItems) {
+                            media.push({
+                                image: {
+                                    url: item.img
+                                },
+                                caption: item.name
+                            })
+                        }
+                        await mchax.sendAlbumMessage(m.cht, media, {
+                            quoted: m,
+                            delay: 2500
+                        })
+                    }
+                } catch (e) {
+                    console.error(e);
+                    m.reply("Terjadi kesalahan dalam mengambil data!");
+                }
+            }
+            break
+        case "say": {
+          if (!text) return m.reply("Masukan textnya!")
+          try {
+           return m.reply(text);
+          } catch (err) {
+            throw err;
+          }
+        }
+        break
         case "toimg": {
                 if (!m.quoted) return m.reply(`> *Mohon balas pesan sticker!*`);
                 if (!/image|webp/.test(m.quoted.msg.mimetype)) return m.reply(`> *Mohon balas pesan sticker!*`);

@@ -283,9 +283,11 @@
            });
 
            if (deletedFiles.length > 0) {
-               sock.sendMessage(config.owner + "@s.whatsapp.net", {
-                   text: `♻️ *Auto Clear Session*\n> - *Jumlah sessions yang dihapus:* ${deletedFiles.length}`,
-               }, { quoted: config.quoted.fkontak });
+               for (let owner of config.owner) {
+                   sock.sendMessage(owner + "@s.whatsapp.net", {
+                       text: `♻️ *Auto Clear Session*\n> - *Jumlah sessions yang dihapus:* ${deletedFiles.length}`,
+                   }, { quoted: config.quoted.fkontak });
+               }
            }
         }, 60 * 60 * 1000);
       }

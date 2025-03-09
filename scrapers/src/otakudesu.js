@@ -1,176 +1,109 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+/*
+By Fruatre
+wa.me/6285817597752
+Saluran : https://whatsapp.com/channel/0029VaNR2B6BadmioY6mar3N
+*/
 
-async function searchAnime(search) {
-    const url = 'https://otakudesu.cloud/?s=' + encodeURIComponent(search) + '&post_type=anime';
-    try {
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
-        const results = [];
+const axios = require("axios");
+const cheerio = require("cheerio");
 
-        $('ul.chivsrc li').each((index, element) => {
-            const title = $(element).find('h2 a').text();
-            const link = $(element).find('h2 a').attr('href');
-            const image = $(element).find('img').attr('src');
-            const genres = [];
+class Otakudesu {
+    constructor() {
+        this.baseUrl = "https://otakudesu.cloud";
+    }
 
-            $(element).find('.set a').each((i, el) => {
-                genres.push($(el).text());
+    latest = async function latest() {
+        try {
+            const url = `${this.baseUrl}/ongoing-anime/`;
+            const { data } = await axios.get(url);
+            const $ = cheerio.load(data);
+
+            let animeList = [];
+
+            $(".venz ul li").each((i, elem) => {
+                const title = $(elem).find("h2.jdlflm").text().trim();
+                const episode = $(elem).find(".epz").text().replace("Episode ", "").trim();
+                const releaseDay = $(elem).find(".epztipe").text().trim();
+                const releaseDate = $(elem).find(".newnime").text().trim();
+                const image = $(elem).find(".thumbz img").attr("src");
+                const link = $(elem).find(".thumb a").attr("href");
+
+                animeList.push({ title, episode, releaseDay, releaseDate, image, link });
             });
 
-            const status = $(element).find('.set:contains("Status")').text().replace('Status : ', '').trim();
-            const rating = $(element).find('.set:contains("Rating")').text().replace('Rating : ', '').trim();
-
-            results.push({
-                title,
-                link,
-                image,
-                genres,
-                status,
-                rating
-            });
-        });
-
-        return results;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return [];
+            return animeList;
+        } catch (error) {
+            return { error: "Gagal mengambil data anime terbaru." };
+        }
     }
-}
 
-async function opsidownloadanime(link) {
-    try {
-        const response = await axios.get(link);
-        const $ = cheerio.load(response.data);
-        const downanime = [];
+    detail = async function detail(url) {
+        try {
+            const { data } = await axios.get(url);
+            const $ = cheerio.load(data);
 
-        $('.episodelist ul li span a').each((index, element) => {
-            downanime.push($(element).attr('href'));
-        });
+            const title = $('title').text().split('|')[0].trim();
+            const description = $('meta[name="description"]').attr('content');
+            const image = $('meta[property="og:image"]').attr('content');
+            const publishedTime = $('meta[property="article:published_time"]').attr('content');
+            const modifiedTime = $('meta[property="article:modified_time"]').attr('content');
+            const titleJapanese = $('p:contains("Japanese")').text().replace('Japanese: ', '').trim();
+            const score = $('p:contains("Skor")').text().replace('Skor: ', '').trim();
+            const producer = $('p:contains("Produser")').text().replace('Produser: ', '').trim();
+            const type = $('p:contains("Tipe")').text().replace('Tipe: ', '').trim();
+            const status = $('p:contains("Status")').text().replace('Status: ', '').trim();
+            const totalEpisodes = $('p:contains("Total Episode")').text().replace('Total Episode: ', '').trim();
+            const duration = $('p:contains("Durasi")').text().replace('Durasi: ', '').trim();
+            const releaseDate = $('p:contains("Tanggal Rilis")').text().replace('Tanggal Rilis: ', '').trim();
+            const studio = $('p:contains("Studio")').text().replace('Studio: ', '').trim();
+            const genres = $('p:contains("Genre") a').map((i, el) => $(el).text().trim()).get().join(', ');
+            const synopsis = $('.sinopc p').map((i, el) => $(el).text().trim()).get().join(' ');
 
-        return downanime;
-    } catch (error) {
-        console.error('Error fetching episode links:', error);
-        return [];
+            const episodes = $('.episodelist ul li').map((i, el) => ({
+                title: $(el).find('a').text().trim(),
+                link: $(el).find('a').attr('href'),
+                releaseDate: $(el).find('.zeebr').text().trim(),
+            })).get();
+
+            return { title, titleJapanese, description, image, publishedTime, modifiedTime, score, producer, type, status, totalEpisodes, duration, releaseDate, studio, genres, synopsis, episodes, url };
+        } catch (error) {
+            return { error: `Gagal mengambil data: ${error.message}` };
+        }
     }
-}
 
-async function getAnimeDetails(link) {
-    try {
-        const response = await axios.get(link);
-        const $ = cheerio.load(response.data);
-        const hasil = [];
-
-        const thumbnail = $('img.attachment-post-thumbnail').attr('src');
-        const judul = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Judul')).parent().text().trim().split(': ')[1];
-        const skor = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Skor')).parent().text().trim().split(': ')[1];
-        const produser = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Produser')).parent().text().trim().split(': ')[1];
-        const tipe = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Tipe')).parent().text().trim().split(': ')[1];
-        const status = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Status')).parent().text().trim().split(': ')[1];
-        const studio = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Studio')).parent().text().trim().split(': ')[1];
-        const rilis = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Tanggal Rilis')).parent().text().trim().split(': ')[1];
-        const episode = $('div.infozingle span b').filter((index, element) => $(element).text().includes('Total Episode')).parent().text().trim().split(': ')[1];
-
-        let sinopsis = '';
-        $('.sinopc p').each((index, element) => {
-            sinopsis += $(element).text().trim() + '\n';
-        });
-
-        const genreArray = [];
-        $('div.infozingle span b').filter((index, element) => $(element).text().includes('Genre')).siblings('a').each((index, element) => {
-            genreArray.push($(element).text().trim());
-        });
-        const genre = genreArray.join(', ');
-        const downanime = await opsidownloadanime(link);
-
-        hasil.push({
-            judul,
-            skor,
-            produser,
-            tipe,
-            status,
-            studio,
-            rilis,
-            episode,
-            genre,
-            thumbnail,
-            downanime,
-            sinopsis: sinopsis.trim()
-        });
-
-        return hasil;
-    } catch (error) {
-        console.error('Error:', error);
-        return [];
-    }
-}
-
-async function otakupdate() {
-    const url = 'https://otakudesu.cloud/ongoing-anime/';
-    try {
-        const response = await axios.get(url);
-        const $ = cheerio.load(response.data);
-        const updates = [];
-
-        $('ul > li .detpost').each((index, element) => {
-            const episode = $(element).find('.epz').text().trim();
-            const day = $(element).find('.epztipe').text().trim();
-            const date = $(element).find('.newnime').text().trim();
-            const link = $(element).find('.thumb a').attr('href');
-            const title = $(element).find('.thumbz h2.jdlflm').text().trim();
-
-            updates.push({
-                title,
-                episode,
-                day,
-                date,
-                link
-            });
-        });
-
-        return updates;
-    } catch (error) {
-        console.error("Error fetching updates:", error);
-        return [];
-    }
-}
-
-async function getEpisodeLinks(link) {
-    try {
-        const response = await axios.get(link);
-        const $ = cheerio.load(response.data);
-        let links = [];
-
-        $('li').each((_, element) => {
-            const resolution = $(element).find('strong').text().trim();
-            const size = $(element).find('i').text().trim();
-            const links = $(element).find('a');
-
-            links.each((_, link) => {
-                const server = $(link).text().trim();
-                const url = $(link).attr('href');
-                if (resolution && url) {
-                    links.push({
-                        resolution,
-                        server,
-                        url,
-                        size: size || "N/A"
-                    });
+    search = async function search(query) {
+        try {
+            const searchUrl = `${this.baseUrl}/?s=${encodeURIComponent(query)}&post_type=anime`;
+            const { data } = await axios.get(searchUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 }
             });
-        });
 
-        return links;
-    } catch (error) {
-        console.error('Error fetching episode links:', error);
-        return [];
+            const $ = cheerio.load(data);
+            const results = [];
+
+            $('.chivsrc > li').each((i, el) => {
+                const image = $(el).find('img').attr('src');
+                const title = $(el).find('h2 a').text().trim();
+                const url = $(el).find('h2 a').attr('href');
+                const genres = [];
+                $(el).find('.set').eq(0).find('a').each((_, genre) => {
+                    genres.push($(genre).text().trim());
+                });
+                const status = $(el).find('.set').eq(1).text().replace('Status :', '').trim();
+                const rating = $(el).find('.set').eq(2).text().replace('Rating :', '').trim();
+
+                if (title && url) {
+                    results.push({ title, url, image, genres, status, rating });
+                }
+            });
+
+            return results;
+        } catch (error) {
+            return { error: 'Gagal mengambil data, coba lagi nanti' };
+        }
     }
 }
 
-module.exports = {
-    searchAnime,
-    opsidownloadanime,
-    getAnimeDetails,
-    otakupdate,
-    getEpisodeLinks
-};
+module.exports = new Otakudesu();

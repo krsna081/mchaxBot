@@ -42,6 +42,15 @@ module.exports = {
         } else if (/\json/gi.test(mime)) {
           body = await response.json();
           m.reply(JSON.stringify(body, null, 2));
+        } else if (/webp/gi.test(mime)) {
+          body = await response.arrayBuffer();
+          sock.sendFile(
+            m.cht,
+            Buffer.from(body),
+            `result.${extension(mime)}`,
+            cap,
+            m,
+          );          
         } else if (/image/gi.test(mime)) {
           body = await response.arrayBuffer();
           sock.sendFile(

@@ -72,6 +72,63 @@ module.exports = async (m,
     const quoted = m.isQuoted ? m.quoted : m;
     try {
     switch (m.command) {
+        case "runtime": {
+            m.reply({ image: { url: `https://og.tailgraph.com/og?fontFamily=Poppins&title=Runtime+Bot&titleTailwind=font-bold%20text-red-600%20text-7xl&stroke=true&text=Time : ${Func.toTime(process.uptime() * 1000)}&textTailwind=text-red-700%20mt-4%20text-2xl&textFontFamily=Poppins&logoTailwind=h-8&bgUrl=https%3A%2F%2Fwallpaper.dog%2Flarge%2F272766.jpg&bgTailwind=bg-white%20bg-opacity-30&footer=MchaX-Bot&footerTailwind=text-grey-600` }, caption: `*– 乂 Runtime Bot*\n> - *Bot  Runtime :* ${await Func.toDate(process.uptime() * 1000)}\n> - *Os Runtime :* ${await Func.toDate(require("os").uptime() * 1000)}` });
+        }
+        break;
+        case "surah": {
+                if (!m.args[0]) return m.reply(`📖 *Gunakan:* ${m.prefix}surah [nomor/nama]\n\nContoh:\n- ${m.prefix}surah 2\n- ${m.prefix}surah al-fatihah`);
+
+                let query = m.args.join(" ").toLowerCase();
+                let {
+                    data
+                } = await axios.get(`https://rest.cloudkuimages.xyz/api/muslim/surah`);
+
+                if (!data.result) return m.reply("❌ Gagal mengambil data surat!");
+
+                let surat = data.result.find(s => s.number == query || s.name_id.toLowerCase() == query || s.name_en.toLowerCase() == query);
+
+                if (!surat) return m.reply("❌ Surat tidak ditemukan!");
+                let audioUrl = surat.audio_url;
+                let response = await axios.head(audioUrl);
+                let fileSize = parseInt(response.headers["content-length"] || 0);
+
+                let pesan = `📖 *Surat ${surat.name_id} (${surat.name_en})*\n`;
+                pesan += `- 🏷 Nama Arab: ${surat.name_short}\n`;
+                pesan += `- 🔢 Nomor Surat: ${surat.number}\n`;
+                pesan += `- 📖 Jumlah Ayat: ${surat.number_of_verses}\n`;
+                pesan += `- 🏙️ Golongan: ${surat.revelation_id} (${surat.revelation_en})\n\n`;
+                pesan += `📜 *Tafsir Singkat:*\n${surat.tafsir.substring(0, 500)}...\n\n`;
+                
+                let mek = await mchax.sendMessage(m.cht, {
+                    text: pesan
+                }, {
+                    quoted: m
+                });
+
+                if (fileSize > 10 * 1024 * 1024) {
+                    await mchax.sendMessage(m.cht, {
+                        document: {
+                            url: audioUrl
+                        },
+                        fileName: `Surah_${surat.name_id}.mp3`,
+                        mimetype: 'audio/mpeg'
+                    }, {
+                        quoted: mek || m
+                    });
+                } else {
+                    await mchax.sendMessage(m.cht, {
+                        audio: {
+                            url: audioUrl
+                        },
+                        mimetype: 'audio/mpeg',
+                        ptt: false
+                    }, {
+                        quoted: mek || m
+                    });
+                }
+            }
+            break;
             case "ffstalk": {
                 if (!text) return m.reply("Masukkan ID Free Fire yang ingin dicari!");
                 try {
@@ -852,7 +909,6 @@ ${list.map((a) => Object.entries(a).map(([a, b]) => `> *🔸 ${a.capitalize()}* 
         if (!jid[0].exists) continue;
          let caption = "*– 乂 *Error Terdeteksi* 📉*\n"
           caption += `> *-* Nama command : ${m.command}\n`
-          caption += `> *-* Lokasi File : ${name}`
           caption += `\n\n${Func.jsonFormat(error)}`
    
           sock.sendMessage(owner + "@s.whatsapp.net", {

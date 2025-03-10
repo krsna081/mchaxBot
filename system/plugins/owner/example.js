@@ -15,8 +15,7 @@ module.exports = {
             return m.reply({
                 poll: {
                     name: message,
-                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`, `${m.prefix + m.command} 3`
-                    ],
+                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`, `${m.prefix + m.command} 3`],
                     selectableCount: 1,
                 },
             });
@@ -74,8 +73,7 @@ module.exports = mchax`
             return m.reply({
                 poll: {
                     name: `${message}\n\n> ❌ Pilihan tidak valid, silakan pilih antara 1 atau 2.`,
-                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`, `${m.prefix + m.command} 3`
-                    ],
+                    values: [`${m.prefix + m.command} 1`, `${m.prefix + m.command} 2`, `${m.prefix + m.command} 3`],
                     selectableCount: 1,
                 },
             });

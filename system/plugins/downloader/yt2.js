@@ -5,9 +5,15 @@ module.exports = {
     command: "yt2",
     alias: [],
     category: ["downloader"],
-    settings: { limit: true },
+    settings: {
+        limit: true
+    },
     description: "Mendownload video atau audio dari YouTube",
-    async run(m, { sock, text, config }) {
+    async run(m, {
+        sock,
+        text,
+        config
+    }) {
         sock.yt2 = sock.yt2 || {};
 
         if (!text) return m.reply(`╭──[❌ *Masukkan Input yang Valid* ]
@@ -23,10 +29,12 @@ module.exports = {
 
         if (text.startsWith("http")) {
             let videoId = text.split("v=")[1] || text.split("/").pop();
-            let search = await yts({ videoId });
-            
+            let search = await yts({
+                videoId
+            });
+
             if (!search || !search.title) return m.reply("❌ Video tidak ditemukan!");
-            
+
             videoUrl = text;
             videoData = {
                 title: search.title,
@@ -37,7 +45,7 @@ module.exports = {
         } else {
             let search = await yts(text);
             if (!search.videos.length) return m.reply("❌ Video tidak ditemukan!");
-            
+
             let result = search.videos[0];
             videoUrl = result.url;
             videoData = {
@@ -48,16 +56,20 @@ module.exports = {
             };
         }
 
-        sock.yt2[m.sender] = { url: videoUrl };
+        sock.yt2[m.sender] = {
+            url: videoUrl
+        };
 
-        let apiUrl = isAudio
-            ? `https://rest.cloudkuimages.xyz/api/download/ytmp3?url=${videoUrl}`
-            : `https://rest.cloudkuimages.xyz/api/download/ytmp4?url=${videoUrl}`;
+        let apiUrl = isAudio ?
+            `https://rest.cloudkuimages.xyz/api/download/ytmp3?url=${videoUrl}` :
+            `https://rest.cloudkuimages.xyz/api/download/ytmp4?url=${videoUrl}`;
 
         async function fetchWithRetry(url, retries = 3) {
             for (let i = 0; i < retries; i++) {
                 try {
-                    let response = await axios.get(url, { timeout: 10000 });
+                    let response = await axios.get(url, {
+                        timeout: 10000
+                    });
                     return response.data;
                 } catch (error) {
                     if (i === retries - 1) throw error;
@@ -67,7 +79,9 @@ module.exports = {
 
         try {
             let response = await fetchWithRetry(apiUrl);
-            let { metadata } = response;
+            let {
+                metadata
+            } = response;
             if (!metadata) throw new Error("❌ Gagal mendapatkan URL download!");
 
             if (!videoData.title) {
@@ -101,27 +115,48 @@ module.exports = {
 
             if (!isAudio && !isVideo) {
                 return sock.sendMessage(m.cht, {
-                    image: { url: videoData.thumb },
+                    image: {
+                        url: videoData.thumb
+                    },
                     caption: infoMessage,
                     footer: config.name,
-                    buttons: [
-                        { buttonId: `.yt2 ${videoUrl} --audio`, buttonText: { displayText: "🎵 Download Audio" }, type: 1 },
-                        { buttonId: `.yt2 ${videoUrl} --video`, buttonText: { displayText: "📹 Download Video" }, type: 1 },
+                    buttons: [{
+                            buttonId: `.yt2 ${videoUrl} --audio`,
+                            buttonText: {
+                                displayText: "🎵 Download Audio"
+                            },
+                            type: 1
+                        },
+                        {
+                            buttonId: `.yt2 ${videoUrl} --video`,
+                            buttonText: {
+                                displayText: "📹 Download Video"
+                            },
+                            type: 1
+                        },
                     ],
                     headerType: 4,
                     viewOnce: true,
-                }, { quoted: m });
+                }, {
+                    quoted: m
+                });
             }
 
             if (fileSize > 10 * 1024 * 1024) {
                 return sock.sendMessage(m.cht, {
-                    document: { url: metadata.download_url },
+                    document: {
+                        url: metadata.download_url
+                    },
                     mimetype: isAudio ? "audio/mpeg" : "video/mp4",
                     fileName: `${videoData.title}.${isAudio ? "mp3" : "mp4"}`,
-                }, { quoted: m });
+                }, {
+                    quoted: m
+                });
             } else {
                 return sock.sendMessage(m.cht, {
-                    [isAudio ? "audio" : "video"]: { url: metadata.download_url },
+                    [isAudio ? "audio" : "video"]: {
+                        url: metadata.download_url
+                    },
                     mimetype: isAudio ? "audio/mpeg" : "video/mp4",
                     contextInfo: {
                         externalAdReply: {
@@ -134,7 +169,9 @@ module.exports = {
                             renderLargerThumbnail: true,
                         },
                     },
-                }, { quoted: m });
+                }, {
+                    quoted: m
+                });
             }
 
         } catch (err) {

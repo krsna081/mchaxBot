@@ -9,7 +9,8 @@ module.exports = {
         text
     }) {
         switch (m.command) {
-            case "balasmenfess": {
+            case "balasmenfess":
+            case "terimamenfess": {
                 sock.menfes = sock.menfes ?? {};
                 const roof = Object.values(sock.menfes).find(menpes => [menpes.a, menpes.b].includes(m.sender));
                 if (!roof) return m.reply("Belum ada sesi menfess");

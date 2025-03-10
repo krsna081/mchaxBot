@@ -99,9 +99,9 @@ class AppleMusic {
                     .catch((e) => e.response);
                 if (!data.videoid) return reject(data);
                 let download = await axios
-                    .get("https://aaplmusicdownloader.com/api/ytdl.php?q=" + data.videoid)
+                    .get("https://fastrestapis.fasturl.cloud/downup/applemusicdown?url=" + url)
                     .catch((e) => e.response);
-                info.download = download.data.dlink;
+                info.download = download.data.result.downloadUrl;
                 resolve(info);
             });
         });

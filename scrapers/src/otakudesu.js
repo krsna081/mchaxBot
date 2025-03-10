@@ -15,7 +15,9 @@ class Otakudesu {
     latest = async function latest() {
         try {
             const url = `${this.baseUrl}/ongoing-anime/`;
-            const { data } = await axios.get(url);
+            const {
+                data
+            } = await axios.get(url);
             const $ = cheerio.load(data);
 
             let animeList = [];
@@ -28,18 +30,46 @@ class Otakudesu {
                 const image = $(elem).find(".thumbz img").attr("src");
                 const link = $(elem).find(".thumb a").attr("href");
 
-                animeList.push({ title, episode, releaseDay, releaseDate, image, link });
+                animeList.push({
+                    title,
+                    episode,
+                    releaseDay,
+                    releaseDate,
+                    image,
+                    link
+                });
             });
 
             return animeList;
         } catch (error) {
-            return { error: "Gagal mengambil data anime terbaru." };
+            return {
+                error: "Gagal mengambil data anime terbaru."
+            };
+        }
+    }
+
+    download = async function download(link) {
+        try {
+            const response = await axios.get(link);
+            const $ = cheerio.load(response.data);
+            const downanime = [];
+
+            $('.episodelist ul li span a').each((index, element) => {
+                downanime.push($(element).attr('href'));
+            });
+
+            return downanime;
+        } catch (error) {
+            console.error('Error fetching episode links:', error);
+            return [];
         }
     }
 
     detail = async function detail(url) {
         try {
-            const { data } = await axios.get(url);
+            const {
+                data
+            } = await axios.get(url);
             const $ = cheerio.load(data);
 
             const title = $('title').text().split('|')[0].trim();
@@ -58,6 +88,7 @@ class Otakudesu {
             const studio = $('p:contains("Studio")').text().replace('Studio: ', '').trim();
             const genres = $('p:contains("Genre") a').map((i, el) => $(el).text().trim()).get().join(', ');
             const synopsis = $('.sinopc p').map((i, el) => $(el).text().trim()).get().join(' ');
+            const download = await this.download(url);
 
             const episodes = $('.episodelist ul li').map((i, el) => ({
                 title: $(el).find('a').text().trim(),
@@ -65,16 +96,40 @@ class Otakudesu {
                 releaseDate: $(el).find('.zeebr').text().trim(),
             })).get();
 
-            return { title, titleJapanese, description, image, publishedTime, modifiedTime, score, producer, type, status, totalEpisodes, duration, releaseDate, studio, genres, synopsis, episodes, url };
+            return {
+                title,
+                titleJapanese,
+                description,
+                image,
+                publishedTime,
+                modifiedTime,
+                score,
+                producer,
+                type,
+                status,
+                totalEpisodes,
+                duration,
+                releaseDate,
+                studio,
+                genres,
+                download,
+                synopsis,
+                episodes,
+                url
+            };
         } catch (error) {
-            return { error: `Gagal mengambil data: ${error.message}` };
+            return {
+                error: `Gagal mengambil data: ${error.message}`
+            };
         }
     }
 
     search = async function search(query) {
         try {
             const searchUrl = `${this.baseUrl}/?s=${encodeURIComponent(query)}&post_type=anime`;
-            const { data } = await axios.get(searchUrl, {
+            const {
+                data
+            } = await axios.get(searchUrl, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 }
@@ -95,13 +150,22 @@ class Otakudesu {
                 const rating = $(el).find('.set').eq(2).text().replace('Rating :', '').trim();
 
                 if (title && url) {
-                    results.push({ title, url, image, genres, status, rating });
+                    results.push({
+                        title,
+                        url,
+                        image,
+                        genres,
+                        status,
+                        rating
+                    });
                 }
             });
 
             return results;
         } catch (error) {
-            return { error: 'Gagal mengambil data, coba lagi nanti' };
+            return {
+                error: 'Gagal mengambil data, coba lagi nanti'
+            };
         }
     }
 }

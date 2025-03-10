@@ -1,6 +1,12 @@
-const { generateWAMessage, areJidsSameUser, proto } = require("baileys");
+const {
+    generateWAMessage,
+    areJidsSameUser,
+    proto
+} = require("baileys");
 
-async function events(m, { sock }) {
+async function events(m, {
+    sock
+}) {
     sock.sendAliasMessage = async (jid, mess = {}, alias = [], quoted = null) => {
         function check(arr) {
             if (!Array.isArray(arr) || !arr.length) return false;
@@ -15,7 +21,9 @@ async function events(m, { sock }) {
         }
 
         if (!check(alias)) return "Alias format is not valid!";
-        let message = await sock.sendMessage(jid, mess, { quoted });
+        let message = await sock.sendMessage(jid, mess, {
+            quoted
+        });
 
         if (!sock.alias[jid]) sock.alias[jid] = {};
         sock.alias[jid][message.key.id] = {
@@ -29,10 +37,16 @@ async function events(m, { sock }) {
 
     sock.sendInputMessage = async (jid, mess = {}, target = "all", timeout = 60000, quoted = null) => {
         let time = Date.now();
-        let message = await sock.sendMessage(jid, mess, { quoted });
+        let message = await sock.sendMessage(jid, mess, {
+            quoted
+        });
 
         if (!sock.input[jid]) sock.input[jid] = {};
-        sock.input[jid][message.key.id] = { chat: jid, id: message.key.id, target };
+        sock.input[jid][message.key.id] = {
+            chat: jid,
+            id: message.key.id,
+            target
+        };
 
         while (Date.now() - time < timeout && !sock.input[jid][message.key.id].hasOwnProperty("input")) {
             await sock.delay(500);
@@ -62,16 +76,20 @@ async function events(m, { sock }) {
                 else {
                     if (aliasObj.response) await m.emit(aliasObj.response);
                     if (aliasObj.eval) await eval(aliasObj.eval);
- 
+
+                    // Hapus alias setelah pengguna memilih
                     delete sock.alias[m.cht][quotedId];
 
+                    // Hapus juga jid jika sudah kosong
                     if (Object.keys(sock.alias[m.cht]).length === 0) delete sock.alias[m.cht];
 
-                    break;
+                    break; // Keluar dari loop setelah eksekusi
                 }
             }
         }
     }
 };
 
-module.exports = { events };
+module.exports = {
+    events
+};

@@ -1,4 +1,9 @@
-let neko = async (m, { sock, Func, Scraper, text }) => {
+let neko = async (m, {
+    sock,
+    Func,
+    Scraper,
+    text
+}) => {
     if (!text) throw "> *❌ Masukkan query atau link dari Pinterest!*";
 
     if (Func.isUrl(text)) {
@@ -20,20 +25,25 @@ let neko = async (m, { sock, Func, Scraper, text }) => {
 
     let match = text.match(/--(\d+)$/);
     let count = match ? Math.min(parseInt(match[1]), 10) : 1;
-    
+
     let shuffledResults = data.sort(() => Math.random() - 0.5);
     let albumResults = shuffledResults.slice(0, 5);
     let privateResults = shuffledResults.slice(0, count);
-    
+
     let formattedResults = albumResults.map(result => ({
-        image: { url: result.images_url }, 
+        image: {
+            url: result.images_url
+        },
         caption: `*– 乂 Pinterest - Pencarian 🔍*\n${Object.entries(result)
             .map(([a, b]) => `> *🔹 ${a.capitalize()} :* ${b}`)
             .join("\n")}`
     }));
 
     if (m.isGroup) {
-        await sock.sendAlbumMessage(m.cht, formattedResults, { quoted: m, delay: 1000 });
+        await sock.sendAlbumMessage(m.cht, formattedResults, {
+            quoted: m,
+            delay: 1000
+        });
     } else {
         for (let item of privateResults) {
             let caption = `*– 乂 Pinterest - Pencarian 🔍*\n${Object.entries(item)
@@ -48,7 +58,9 @@ let neko = async (m, { sock, Func, Scraper, text }) => {
 neko.command = "pinterest";
 neko.alias = ["pin", "pindl"];
 neko.category = ["downloader", "tools"];
-neko.settings = { limit: true };
+neko.settings = {
+    limit: true
+};
 neko.description = "🔎 Mencari atau mengunduh media dari Pinterest!";
 neko.loading = true;
 

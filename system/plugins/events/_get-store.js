@@ -1,4 +1,7 @@
-async function events(m, { sock, isPrems }) {
+async function events(m, {
+    sock,
+    isPrems
+}) {
     if (!m.isGroup) return;
     if (db.list().group[m.cht]?.mute) return;
     if (m.isBot && m.fromMe) return;
@@ -19,7 +22,11 @@ async function events(m, { sock, isPrems }) {
         sender: storedMsg.participant
     });
 
-    await sock.sendMessage(m.cht, { forward: _m }, { quoted: m });
+    await sock.sendMessage(m.cht, {
+        forward: _m
+    }, {
+        quoted: m
+    });
 }
 
 module.exports = {

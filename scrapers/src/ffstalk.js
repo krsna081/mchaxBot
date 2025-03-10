@@ -13,10 +13,12 @@ const cheerio = require('cheerio')
  * @param {string} id 
  * @returns {Promise <Array>}
  */
-async function ffStalk(id){
+async function ffStalk(id) {
     let formdata = new FormData()
     formdata.append('uid', id)
-    let { data } = await axios.post('https://tools.freefireinfo.in/profileinfo.php?success=1', formdata, {
+    let {
+        data
+    } = await axios.post('https://tools.freefireinfo.in/profileinfo.php?success=1', formdata, {
         headers: {
             "content-type": "application/x-www-form-urlencoded",
             "origin": "https://tools.freefireinfo.in",
@@ -53,7 +55,7 @@ async function ffStalk(id){
     let guildMembers = tr[29].split(': ')[1] || 'doesnt have guild'
     let guildId = tr[30].split(': ')[1] || 'doesnt have guild'
     let equippedItems = []
-    $('.equipped-items').find('.equipped-item').each((i,e) => {
+    $('.equipped-items').find('.equipped-item').each((i, e) => {
         let name = $(e).find('p').text().trim()
         let img = $(e).find('img').attr('src')
         equippedItems.push({

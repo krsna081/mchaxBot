@@ -29,7 +29,10 @@ async function savetwitter(url) {
                 download: $(el).closest(".download-items").find("a").attr("href")
             });
         });
-        return { type: "image", images };
+        return {
+            type: "image",
+            images
+        };
     }
 
     if ($(".tw-video").length) {
@@ -40,7 +43,10 @@ async function savetwitter(url) {
                 download: $(el).attr("href")
             });
         });
-        return { type: "video", videos };
+        return {
+            type: "video",
+            videos
+        };
     }
 
     return {

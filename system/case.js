@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 //============================
 // - buat Pengguna case bisa tambah fitur disini
 // - Fitur akan otomatis terlihat di .menu jadi jangan bikin fitur menu lagi 👍

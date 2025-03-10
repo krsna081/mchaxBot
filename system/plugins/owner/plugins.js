@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 const fs = require("fs");
 const jsBeautify = require("js-beautify");
 
@@ -49,7 +58,14 @@ module.exports = {
 
       try {
         let file = `${pg.directory}/${input}.js`;
-        fs.writeFileSync(file.trim(), jsBeautify(m.quoted.body));
+        fs.writeFileSync(file.trim(), jsBeautify(`// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/\n\n` + m.quoted.body));
         m.reply(`> 🎉 *Plugin ${input} berhasil disimpan!*`);
       } catch (e) {
         m.reply(

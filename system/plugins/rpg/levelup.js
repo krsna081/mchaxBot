@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 let path = require("path");
 let dataPath = path.join(process.cwd(), "lib", "leveling.js");
 let levelling = require(dataPath);

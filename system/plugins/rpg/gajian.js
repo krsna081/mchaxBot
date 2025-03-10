@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 let money = 50000;
 let exp = 5000;
 let cooldown = 7 * 60 * 60 * 1000;

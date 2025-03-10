@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 const axios = require('axios');
 const BodySender = require('form-data');
 const cheerio = require('cheerio');

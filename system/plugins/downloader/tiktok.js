@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 let neko = async (m, { sock, Func, Scraper, Uploader, store, text, config }) => {
     if (!text.includes("tiktok"))
         return m.reply("❌ *Link TikTok tidak ditemukan! Masukkan link yang valid.*");

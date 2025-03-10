@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 //© Bentala - Bot
 // • Credits : wa.me/6282258713880 [ Renjana ]
 // • Owner: 6282258713880

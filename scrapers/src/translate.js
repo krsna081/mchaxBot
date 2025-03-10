@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 async function translate(query = "", lang) {
     if (!query.trim()) return "";
     const url = new URL("https://translate.googleapis.com/translate_a/single");

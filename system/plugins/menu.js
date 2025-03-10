@@ -1,3 +1,12 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 const moment = require("moment-timezone");
 const pkg = require(process.cwd() + "/package.json");
 const axios = require("axios");

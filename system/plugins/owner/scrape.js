@@ -56,7 +56,14 @@ module.exports = {
       let input = m.text.replace("--add", "").trim();
       try {
         let file = scraper.dir + "/" + input + ".js";
-        fs.writeFileSync(file.trim(), await beauty(m.quoted.body));
+        fs.writeFileSync(file.trim(), await beauty(`// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/\n\n` + m.quoted.body));
         m.reply("> ✅ *Berhasil menyimpan scraper:* " + input);
       } catch (e) {
         m.reply(`> ❌ *Gagal menyimpan scraper*, coba lagi.`);

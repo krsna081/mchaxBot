@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Axel/nekoBot.git"
+    "url": "git+https://github.com/krsna081/mchaxBot"
   },
   "keywords": [
     "botwa",
@@ -21,17 +21,16 @@
   "author": "Axel_Team",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Axel/nekoBot/issues"
+    "url": "https://github.com/krsna081/mchaxBot/issues"
   },
-  "homepage": "https://github.com/Axel/nekoBot#readme",
+  "homepage": "https://github.com/krsna081/mchaxBot#readme",
   "dependencies": {
     "@vitalets/google-translate-api": "^9.2.1",
     "acrcloud": "^1.4.0",
     "archiver": "^7.0.1",
     "async-lock": "^1.4.1",
     "awesome-phonenumber": "^2.73.0",
-    "baileys": "github:kangfarrel/felzar-Baileys",
-    "canvafy": "^7.2.0",
+    "baileys": "npm:@fizzxydev/baileys-pro@latest",
     "canvas": "^2.11.2",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
@@ -49,6 +48,7 @@
     "link-preview-js": "^3.0.12",
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.46",
+    "node-schedule": "^2.1.1",
     "node-cron": "^3.0.3",
     "node-fetch": "npm:undici@^6.21.0",
     "node-hls": "^1.0.9",

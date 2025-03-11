@@ -10,18 +10,18 @@
 const fs = require("node:fs");
 
 const config = {
-  owner: ["6281235807940", "6285783117068"],
+  owner: ["628xxxx"],
   name: "© MchaX-Bot - Simple WhatsApp bot by K For Krisnoll",
   sessions: "sessions",
   prefix: [".", "?", "!", "/"],
-  database_url: "mongodb+srv://krizzioxyz:2CxkFhP6ezVrBjfw@nekobot.h88lt.mongodb.net/?retryWrites=true&w=majority&appName=nekoBot",
+  database_url: "",
   sticker: {
     packname: "✨ MchaX-Bot ✨",
     author: "🐾 K For Krisnoll 🐾",
   },
   id: {
-    newsletter: "120363218091403108@newsletter",
-    group: "120363361348319166@g.us",
+    newsletter: "120xxxx@newsletter",
+    group: "123xxxx@g.us",
   },
   messages: {
       wait: "*( Loading )* Tunggu Sebentar...",

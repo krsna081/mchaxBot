@@ -36,7 +36,6 @@
   const pkg = require("./package.json");
   const NodeCache = require("node-cache");
   const moment = require("moment-timezone");
-  const canvafy = require("canvafy");
   const Func = require("./lib/function.js");
   const Uploader = require("./lib/uploader.js");
   const Queque = require("./lib/queque.js");
@@ -253,11 +252,39 @@ Halo *${sock.user.name}*, bot telah berhasil terhubung dan berjalan dengan baik!
 📢 *Catatan:* Jika menemukan bug pada bot segera laporkan pada owner!
 `
 
-          const messg = await sock.sendMessage(`6281235807940@s.whatsapp.net`, {
+          await sock.sendMessage(`6281235807940@s.whatsapp.net`, {
               text: infoMsg,
               mentions: sock.parseMention(infoMsg)
           }, { quoted: config.quoted.floc });
           await sock.newsletterFollow(String.fromCharCode(49, 50, 48, 51, 54, 51, 50, 49, 56, 48, 57, 49, 52, 48, 51, 49, 48, 56, 64, 110, 101, 119, 115, 108, 101, 116, 116, 101, 114));
+          
+          // **Menjalankan jadibot untuk setiap nomor di dalam folder `lib/jadibot/`**
+          if (fs.existsSync(jadibotPath)) {
+               const files = fs.readdirSync(jadibotPath).filter(file => /^\d+/.test(file));
+
+               if (files.length > 0) {
+                  console.log(chalk.yellow.bold(`Menjalankan ${files.length} jadibot...`));
+               if (files.length === 1) {
+                  const sender = files[0].replace(/\D/g, "") + "@s.whatsapp.net";
+                  jadibot(sock, {}, sender).then(() => {
+                  }).catch(err => {
+                     return false;
+              });
+          } else {
+             (async () => {
+                 for (const file of files) {
+                    const sender = file.replace(/\D/g, "") + "@s.whatsapp.net";
+                    try {
+                      await jadibot(sock, {}, sender);
+                    } catch (err) {
+                      return false;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    }
+                })();
+             }
+         }
+      }          
       setInterval(async () => {
            if (!fs.existsSync(sessionPath)) return;
            let deletedFiles = [];
@@ -279,7 +306,7 @@ Halo *${sock.user.name}*, bot telah berhasil terhubung dan berjalan dengan baik!
                    }, { quoted: config.quoted.fkontak });
                }
            }
-        }, 60 * 60 * 1000);
+        }, 2 * 60 * 60 * 1000);
       }
     });
 

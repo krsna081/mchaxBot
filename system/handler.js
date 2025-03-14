@@ -9,14 +9,7 @@
 
 const config = require("../settings.js");
 const Func = require("../lib/function.js");
-const serialize = require("../lib/serialize.js");
 const Uploader = require("../lib/uploader.js");
-const {
-   jidNormalizedUser,
-   WAMessageStubType
-} = require("baileys");
-const moment = require("moment-timezone");
-const cron = require("node-cron");
 const chalk = require("chalk");
 
 module.exports = async (m, sock, store) => {

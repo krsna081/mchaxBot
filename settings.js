@@ -23,6 +23,12 @@ const config = {
     newsletter: "120xxxx@newsletter",
     group: "123xxxx@g.us",
   },
+  cpanel: {
+    domain: "https://",
+    apikey: "ptla_",
+    nets: 15,
+    egg: 5,
+  },
   messages: {
       wait: "*( Loading )* Tunggu Sebentar...",
       owner: "*( Denied )* Kamu bukan owner ku !",

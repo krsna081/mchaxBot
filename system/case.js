@@ -81,6 +81,13 @@ module.exports = async (m,
     const quoted = m.isQuoted ? m.quoted : m;
     try {
         switch (m.command) {
+            case "lirik": {
+                if (!text) return m.reply("masukan judul lagu!");
+                let data = await Scraper.lirik(text);
+                let cap = `*– 乂 Lyrics Lagu*\n\n> - *Judul :* ${data.title}\n> - *SubJudul :* ${data.subtitle}\n> - *Artis :* ${data.artist}\n> - *Platform :* ${data.platform}\n\n\`\`\`${data.lyrics}\`\`\``;
+                await m.reply(cap);
+            }
+            break
             case "sw": {
                 if (!m.isOwner) return m.reply(config.messages.owner);
                 try {

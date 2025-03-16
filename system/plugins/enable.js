@@ -21,17 +21,23 @@ module.exports = {
         let isAll = false
         let isUser = false
 
-        let listOptions = m.isGroup ? `*– 乂 Daftar Pilihan Group :*
-- action ( ${chat.action ? 'on' : 'off'} )
-- antibot ( ${chat.anti.bot ? 'on' : 'off'} )
-- antilink ( ${chat.anti.link ? 'on' : 'off'} )
-- antinsfw ( ${chat.anti.nsfw ? 'on' : 'off'} )
-- antitoxic ( ${chat.anti.toxic ? 'on' : 'off'} )` : `*– 乂 Daftar Pilihan Owner :*
+        let listOptions = `*– 乂 Daftar Pilihan Owner :*
 - anticall ( ${settings.anticall} )
 - online ( ${settings.online} )
 - private ( ${settings.private} )
 - reactsw ( ${settings.reactsw} )
-- self ( ${settings.self} )`.trim()
+- self ( ${settings.self} )`;
+        if (m.isGroup) {
+            listOptions += `
+
+*– 乂 Daftar Pilihan Group :*
+- action ( ${chat.action ? 'on' : 'off'} )
+- antibot ( ${chat.anti.bot ? 'on' : 'off'} )
+- antigctag ( ${chat.anti.gctag ? 'on' : 'off'} )
+- antilink ( ${chat.anti.link ? 'on' : 'off'} )
+- antinsfw ( ${chat.anti.nsfw ? 'on' : 'off'} )
+- antitoxic ( ${chat.anti.toxic ? 'on' : 'off'} )`;
+        }
 
         switch (type) {
             case 'action':

@@ -125,35 +125,23 @@ module.exports = {
 
         let infoMessage = `╭──[🎵 *YouTube - Video Downloader* ]\n` +
             `${Object.entries(metadata).map(([a, b]) => `᎒⊸ *${a}* : ${b}`).join("\n")}\n` +
-            `╰────────────•`;
+            `\n*– 乂 Pilih Options*
+᎒⊸ *1*. video download 
+᎒⊸ *2*. audio download\n╰────────────•`;
 
         if (!isAudio && !isVideo) {
-            return sock.sendMessage(m.cht, {
+            return await sock.sendAliasMessage(m.cht, {
                 image: {
                     url: video.thumb
                 },
-                caption: infoMessage,
-                footer: config.name,
-                buttons: [{
-                        buttonId: `.yt ${sock.yt[m.sender].url} --audio`,
-                        buttonText: {
-                            displayText: "🎵 Download Audio"
-                        },
-                        type: 1
-                    },
-                    {
-                        buttonId: `.yt ${sock.yt[m.sender].url} --video`,
-                        buttonText: {
-                            displayText: "📹 Download Video"
-                        },
-                        type: 1
-                    },
-                ],
-                headerType: 4,
-                viewOnce: true,
+                caption: infoMessage
+            }, [{
+                alias: `1`,
+                response: `${m.prefix + m.command} ${sock.yt[m.sender].url} --video`
             }, {
-                quoted: m
-            });
+                alias: `2`,
+                response: `${m.prefix + m.command} ${sock.yt[m.sender].url} --audio`
+            }], m);
         }
 
         let finalUrl = sock.yt[m.sender]?.url || videoUrl;

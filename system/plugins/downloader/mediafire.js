@@ -32,7 +32,7 @@ module.exports = {
     let limit = Func.sizeLimit(data.size, db.list().settings.max_upload);
 
     if (limit.oversize)
-      throw `Maaf, ukuran file *( ${size} )* melebihi batas ukuran yang ditentukan. Upgrade status kamu ke premium untuk mendownload file hingga *1GB*!`;
+      throw `Maaf, ukuran file *( ${data.size} )* melebihi batas ukuran yang ditentukan. Upgrade status kamu ke premium untuk mendownload file hingga *1GB*!`;
 
     m.reply({
       document: buffer,

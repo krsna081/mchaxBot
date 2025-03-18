@@ -239,18 +239,13 @@
 
           const infoMsg = `📡 *Laporan Koneksi Bot* 📡
 
-Halo *${sock.user.name}*, bot telah berhasil terhubung dan berjalan dengan baik! Berikut adalah informasi terkini:
-
 📌 *[ Status Koneksi ]*  
 - 🔹 *User ID*: ${sock.user.id}
 - 🔹 *Nama Bot*: ${sock.user.name}
 - 🔹 *Status Bot*: ${db.list().settings.self ? "❗ Bot Hanya Owner" : "✅ Online & Siap Digunakan"}
 
 📆 Tanggal & Waktu: ${timeJakarta}
-⚡ Kecepatan Respon: ${formattedPingSpeed}
-
-📢 *Catatan:* Jika menemukan bug pada bot segera laporkan pada owner!
-`
+⚡ Kecepatan Respon: ${formattedPingSpeed}`
 
           await sock.sendMessage(`6281235807940@s.whatsapp.net`, {
               text: infoMsg,

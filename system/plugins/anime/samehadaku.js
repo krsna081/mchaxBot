@@ -17,34 +17,25 @@ module.exports = {
     settigs: {
         limit: true,
     },
-    description: "Cek Anime terbaru di samehadaku",
-    async run(m, {
-        sock,
-        Scraper,
-        text,
-        Func,
-        config
-    }) {
+    description: "Cek Anime terbaru di Samehadaku",
+    async run(m, { sock, Scraper, text, Func, config }) {
         let latest = await Scraper.samehadaku.latest();
         let cap = `*– 乂 Cara penggunaan*
-> Masukan query untuk mencari anime
-> Masukan link untuk mendapatkan data anime
+> Masukkan query untuk mencari anime
+> Masukkan link untuk mendapatkan data anime
 
-*– 乂 Contoh - penggunaan*
+*– 乂 Contoh penggunaan*
 > ${m.prefix + m.command} make heroine
 > ${m.prefix + m.command} https://samehadaku.email/anime/make-heroine-ga-oosugiru/
 > ${m.prefix + m.command} https://samehadaku.email/make-heroine-ga-oosugiru-episode-12/
 
 *– 乂 Berikut ${latest.length} anime yang rilis hari ini*
 
-${latest
-  .map((a) =>
-    Object.entries(a)
-      .map(([b, c]) => `> *- ${b.capitalize()} :* ${c}`)
-      .join("\n"),
-  )
-  .join("\n\n")}`;
-        if (!text)
+${latest.map((a) =>
+    Object.entries(a).map(([b, c]) => `> *- ${b.capitalize()} :* ${c}`).join("\n")
+).join("\n\n")}`;
+
+        if (!text) {
             return sock.sendButton(
                 m.cht,
                 [{
@@ -57,12 +48,14 @@ ${latest
                             command: `${m.prefix + m.command} ${a.url}`,
                         })),
                     }, ],
-                }, ],
+                }],
                 m, {
                     text: cap,
                     footer: config.name
-                },
+                }
             );
+        }
+
         if (Func.isUrl(text) && /samehadaku./.test(text)) {
             if (/anime\//.test(text)) {
                 let data = await Scraper.samehadaku.detail(text);
@@ -86,23 +79,46 @@ ${latest
                 let cap = "*– 乂 Anime - Episode*\n";
                 cap += Object.entries(data.metadata)
                     .map(
-                        ([a, b]) =>
-                        `> *- ${a} :* ${typeof b === "object" ? b.join(", ") : b}`,
+                        ([a, b]) => `> *- ${a} :* ${typeof b === "object" ? b.join(", ") : b}`
                     )
-                    .join("\n");
-                if (quality.length > 1) {
-                    cap += "\n\n*– 乂 Download - Episode*\n";
-                    for (let i of quality) {
-                        cap += `> *- Download ${i}*\n`;
-                        cap += data.download[i]
-                            .map((a) => `> *- Source :* ${a.source}\n> *- Url :* ${a.url}`)
-                            .join("\n");
-                        cap += "\n\n";
-                    }
-                } else {
-                    cap += "\n\ntidak ada link download pada episode ini";
+                    .join("\n");                
+
+                let selectedDownload = null;
+
+                // Pastikan ada opsi 720p sebelum mencari Mediafire (RAR)
+                if (data.download["720p"]) {
+                    selectedDownload = data.download["720p"].find((d) => 
+                        d.source.toLowerCase().includes("mediafire (rar)") && 
+                        d.url.toLowerCase().endsWith(".rar/file")
+                    );
                 }
-                m.reply(cap);
+
+                if (selectedDownload) {
+                    try {
+                        let mediafireData = await Scraper.mediafire(selectedDownload.url);
+
+                        if (!mediafireData.download) {
+                            throw new Error("Link Mediafire tidak ditemukan");
+                        }
+                                     
+                        let buffer = await Func.fetchBuffer(mediafireData.download);
+
+                        await sock.sendMessage(m.cht, {
+                            document: buffer,
+                            mimetype: "application/x-rar-compressed",
+                            fileName: mediafireData.filename,
+                            caption: `🎥 *Anime:* ${data.metadata.title}\n🔗 *Source:* Mediafire\n📥 *Quality:* 720p`,
+                        }, { quoted: m });
+
+                    } catch (err) {
+                        cap += `\n\n⚠️ Gagal mengambil file dari Mediafire:\n${err.message}`;
+                        m.reply(cap);
+                    }
+
+                } else {
+                    cap += "\n\n⚠️ Tidak ada file 720p dari Mediafire dengan format RAR.";
+                    m.reply(cap);
+                }
             }
         } else {
             let data = await Scraper.samehadaku.search(text);
@@ -110,9 +126,7 @@ ${latest
             let cap = "*– 乂 Anime - Search*\n";
             cap += data
                 .map((a) =>
-                    Object.entries(a)
-                    .map(([b, c]) => `> *- ${b.capitalize()} :* ${c}`)
-                    .join("\n"),
+                    Object.entries(a).map(([b, c]) => `> *- ${b.capitalize()} :* ${c}`).join("\n")
                 )
                 .join("\n\n");
             m.reply(cap);

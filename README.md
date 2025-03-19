@@ -22,14 +22,16 @@ Dibangun dengan **Node.js** dan **Baileys**, MchaX-Bot mudah dikembangkan dan di
 ## Using access number, user, & password
 kalian bisa edit sendiri ya kalo males minta acc ke saya, letaknya di **lib/akses.js** dan isi dari raw GitHub sperti ini kira-kira
 
-```[
+```
+[
   {
     "user": "admin",
     "pw": "123",
     "owner": "6281235807940"
   },
   // jika lebih dari 1 maka tambah fungsi sama seperti di atas!
-]```
+]
+```
 
 Owner itu di ambil dari **settings.js** di **owner** array ke 1 jika ada 2 nomor di bot kalian maka cukup masukkan yang ke 1 saja di raw GitHub nya!.. ohh iya ini bisa raw bebas ya, bisa **pastebin, pastelink** dan sejenisnya yang penting public saja.. Kenapa saya make GitHub? Karena sudah ada akses manual lewat botnya jika running.. Di plugins **owner/akses.js** kalian bisa edit menggunakan api GitHub kalian sendiri... Terimakasih 🙏, salam dua jari 🤙
 

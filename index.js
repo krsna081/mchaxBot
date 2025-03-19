@@ -43,6 +43,7 @@
   const Database = require("./lib/database.js");
   const append = require("./lib/append");
   const serialize = require("./lib/serialize.js");
+  const akses = require("./lib/akses.js");
   const config = require("./settings.js");
   const {
      jadibot,
@@ -120,6 +121,7 @@
     timestamp: () => `,"time":"${new Date().toJSON()}"`,
   }).child({ class: "MchaX-Bot" });
   logger.level = "fatal";
+  if (!(await akses()).status) return;
   console.log(chalk.magenta.bold(`
 ⠄⠄⠄⢰⣧⣼⣯⠄⣸⣠⣶⣶⣦⣾⠄⠄⠄⠄⡀⠄⢀⣿⣿⠄⠄⠄⢸⡇⠄⠄
 ⠄⠄⠄⣾⣿⠿⠿⠶⠿⢿⣿⣿⣿⣿⣦⣤⣄⢀⡅⢠⣾⣛⡉⠄⠄⠄⠸⢀⣿⠄
@@ -301,7 +303,7 @@
                    }, { quoted: config.quoted.fkontak });
                }
            }
-        }, 2 * 60 * 60 * 1000);
+        }, 60 * 60 * 1000);
       }
     });
 

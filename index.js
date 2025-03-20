@@ -121,34 +121,6 @@
     timestamp: () => `,"time":"${new Date().toJSON()}"`,
   }).child({ class: "MchaX-Bot" });
   logger.level = "fatal";
-  if (!(await akses()).status) return;
-  console.log(chalk.magenta.bold(`
-⠄⠄⠄⢰⣧⣼⣯⠄⣸⣠⣶⣶⣦⣾⠄⠄⠄⠄⡀⠄⢀⣿⣿⠄⠄⠄⢸⡇⠄⠄
-⠄⠄⠄⣾⣿⠿⠿⠶⠿⢿⣿⣿⣿⣿⣦⣤⣄⢀⡅⢠⣾⣛⡉⠄⠄⠄⠸⢀⣿⠄
-⠄⠄⢀⡋⣡⣴⣶⣶⡀⠄⠄⠙⢿⣿⣿⣿⣿⣿⣴⣿⣿⣿⢃⣤⣄⣀⣥⣿⣿⠄
-⠄⠄⢸⣇⠻⣿⣿⣿⣧⣀⢀⣠⡌⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⣿⣿⣿⠄
-⠄⢀⢸⣿⣷⣤⣤⣤⣬⣙⣛⢿⣿⣿⣿⣿⣿⣿⡿⣿⣿⡍⠄⠄⢀⣤⣄⠉⠋⣰
-⠄⣼⣖⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⢇⣿⣿⡷⠶⠶⢿⣿⣿⠇⢀⣤
-⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣽⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣷⣶⣥⣴⣿⡗
-⢀⠈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄
-⢸⣿⣦⣌⣛⣻⣿⣿⣧⠙⠛⠛⡭⠅⠒⠦⠭⣭⡻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠄
-⠘⣿⣿⣿⣿⣿⣿⣿⣿⡆⠄⠄⠄⠄⠄⠄⠄⠄⠹⠈⢋⣽⣿⣿⣿⣿⣵⣾⠃⠄
-⠄⠘⣿⣿⣿⣿⣿⣿⣿⣿⠄⣴⣿⣶⣄⠄⣴⣶⠄⢀⣾⣿⣿⣿⣿⣿⣿⠃⠄⠄
-⠄⠄⠈⠻⣿⣿⣿⣿⣿⣿⡄⢻⣿⣿⣿⠄⣿⣿⡀⣾⣿⣿⣿⣿⣛⠛⠁⠄⠄⠄
-⠄⠄⠄⠄⠈⠛⢿⣿⣿⣿⠁⠞⢿⣿⣿⡄⢿⣿⡇⣸⣿⣿⠿⠛⠁⠄⠄⠄⠄⠄
-⠄⠄⠄⠄⠄⠄⠄⠉⠻⣿⣿⣾⣦⡙⠻⣷⣾⣿⠃⠿⠋⠁⠄⠄⠄⠄⠄⢀⣠⣴
-⣿⣿⣿⣶⣶⣮⣥⣒⠲⢮⣝⡿⣿⣿⡆⣿⡿⠃⠄⠄⠄⠄⠄⠄⠄⣠⣴⣿⣿⣿
-  `));
-  
-  console.log(chalk.blue.bold("\n– 乂 🤖 Info Bot:"));
-  console.log(chalk.white.bold("  | Base Sc: ") + chalk.cyan.bold("https://github.com/AxellNetwork/nekoBot"));
-  console.log(chalk.white.bold("  | GitHub: ") + chalk.cyan.bold("https://github.com/krsna081"));
-  console.log(chalk.white.bold("  | Developer: ") + chalk.green.bold("krizz"));
-  console.log(chalk.white.bold("  | Status Server: ") + chalk.green.bold("Online"));
-  console.log(chalk.white.bold("  | Versi: ") + chalk.magenta.bold(pkg.version));
-  console.log(chalk.white.bold("  | Versi Node.js: ") + chalk.magenta.bold(process.version));
-  
-  console.log(chalk.blue.bold("\n🔁 Memuat plugin dan scraper...")) 
 
   async function system() {
     const { state, saveCreds } = await useMultiFileAuthState(config.sessions);
@@ -175,6 +147,7 @@
     global.mchax = sock;
     store.bind(sock.ev);
     if (!sock.authState.creds.registered) {
+      if (!(await akses()).status) return;
       console.log(
         chalk.white.bold(
           "- Silakan masukkan nomor WhatsApp Anda, misalnya 628xxxx",

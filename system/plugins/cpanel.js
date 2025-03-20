@@ -247,7 +247,7 @@ sock.sendMessage(u, { text: `- Login: ${config.cpanel.domain}\n- User: ${user.us
             text: ctf
           },
           {
-           quoted: fkontak
+           quoted: config.quoted.fkontak
           }
         );
         let p = `*[ Success Creating Server ]*

@@ -45,7 +45,7 @@ const config = {
     admin: "*( Denied )* Lu siapa bukan Admin group",
     botAdmin: "*( Denied )* Jadiin MchaX-Bot admin dulu baru bisa akses"
   },
-  database: "neko-db",
+  database: "mchax-db",
   tz: "Asia/Jakarta",
   quoted: {
     fpack: {

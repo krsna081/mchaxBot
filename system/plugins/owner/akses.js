@@ -1,9 +1,18 @@
+// © MchaX-Bot
+// • Credits : wa.me/6281235807940 [ Krizz ]
+// • Owner: 6281235807940
+
+/*
+• Telegram: krsna_081
+• Instagram: krsna081
+*/
+
 const axios = require("axios");
 
 const GITHUB_OWNER = "krsna081"; // Ganti dengan username GitHub kamu
 const REPO_NAME = "data-mchax"; // Nama repository
 const FILE_PATH = "key.json"; // Path file JSON di repository
-const TOKEN = "token_kalian"; // Token GitHub
+const TOKEN = "tokenkalian"; // Token GitHub
 
 async function getGitHubFile() {
     try {
@@ -16,7 +25,10 @@ async function getGitHubFile() {
         });
 
         const content = Buffer.from(response.data.content, "base64").toString("utf-8");
-        return { data: JSON.parse(content), sha: response.data.sha };
+        return {
+            data: JSON.parse(content),
+            sha: response.data.sha
+        };
     } catch (error) {
         console.error("Gagal mengambil file dari GitHub:", error.response?.data || error.message);
         return null;
@@ -46,12 +58,9 @@ async function updateGitHubFile(updatedData, sha) {
     }
 }
 
-let mchax = async (m, { text, sock }) => {
-    let args = text.split(",");
-    let command = args[0]?.trim();
-
-    // **Jika hanya "akses", tampilkan daftar pengguna**
-    if (!command) {
+let mchax = async (m, { sock }) => {
+    if (!m.args.length) {
+        // **Jika hanya "akses", tampilkan daftar pengguna**
         let githubData = await getGitHubFile();
         if (!githubData) {
             return m.reply("Gagal mengambil data dari GitHub!");
@@ -63,20 +72,21 @@ let mchax = async (m, { text, sock }) => {
             return m.reply("⚠️ Tidak ada pengguna yang terdaftar!");
         }
 
-        let userList = data.map((user, index) => `🔹 *${index + 1}*. User: ${user.user}\n   ├ 🔑 PW: ${user.pw}\n   └ 🌐 IP: ${user.owner}`).join("\n\n");
+        let userList = data.map((user, index) => `🔹 *${index + 1}*. User: ${user.user}\n   ├ 🔑 PW: ${user.pw}\n   └ 👑 Owner: ${user.owner}`).join("\n\n");
 
         return m.reply(`📜 *Daftar Pengguna Terdaftar:*\n\n${userList}`);
     }
 
-    if (args.length < 3) {
-        return m.reply("Format salah! Gunakan:\n\nakses --add owner,user,pw\nakses --delete owner,user,pw");
-    }
-
-    let [_, owner, user, pw] = args.map(a => a.trim());
-
+    let command = m.args[0];
     if (!["--add", "--delete"].includes(command)) {
         return m.reply("Gunakan --add atau --delete!");
     }
+
+    if (m.args.length < 2) {
+        return m.reply("Format salah! Gunakan:\n\nakses --add owner user pw\nakses --delete owner user pw");
+    }
+
+    let [owner, user, pw] = m.args.slice(1).map(a => a.trim());
 
     let githubData = await getGitHubFile();
     if (!githubData) {
@@ -93,7 +103,7 @@ let mchax = async (m, { text, sock }) => {
         data.push({ user, pw, owner });
 
         if (await updateGitHubFile(data, sha)) {
-            return m.replt(`✅ User ${user} berhasil ditambahkan!`);
+            return m.reply(`✅ User ${user} berhasil ditambahkan!`);
         } else {
             return m.reply("❌ Gagal menambahkan user!");
         }
@@ -115,7 +125,7 @@ let mchax = async (m, { text, sock }) => {
     }
 };
 
-mchax.command = "akses"
+mchax.command = "akses";
 mchax.alias = [];
 mchax.category = ["owner"];
 mchax.settings = { owner: true };

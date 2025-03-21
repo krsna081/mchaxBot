@@ -68,17 +68,16 @@ module.exports = async (m, sock, store) => {
         return;
     }
 
-    if (isCmd && !(await sock.groupMetadata(config.id.group)).participants.map(a => a.id).includes(m.sender) && !m.isGroup && !isPrems && !m.isOwner) {
-        let cap = `*( Danied )* Sebelum mengakses fitur [ ${m.prefix + m.command} ], silakan bergabung dengan komunitas MchaX-Bot untuk mendapatkan akses penuh ke bot ini dan fitur-fitur lainnya.`
+    if (isCmd && !(await sock.groupMetadata(config.id.group)).participants.map(a => a.id).includes(m.sender) && !isPrems && !m.isOwner) {
+        let cap = `Sebelum mengakses fitur [ ${m.prefix + m.command} ], silahkan bergabung dengan komunitas MchaX-Bot untuk mendapatkan akses penuh ke bot ini dan fitur-fitur lainnya.\n\n*– Bergabung Sekarang:*\nhttps://chat.whatsapp.com/Kk4OfajNSAQB6Oq3LrKF41`
         sock.sendMessage(
             m.cht, {
                 text: cap,
                 contextInfo: {
                     externalAdReply: {
                         title: await (await sock.groupMetadata(config.id.group)).subject,
-                        body: null,
-                        thumbnailUrl: await sock.profilePictureUrl(config.id.group, 'image').catch(_ => null),
                         sourceUrl: "https://chat.whatsapp.com/Kk4OfajNSAQB6Oq3LrKF41",
+                        thumbnailUrl: await sock.profilePictureUrl(config.id.group, 'image').catch(_ => null),
                         mediaType: 1,
                         renderLargerThumbnail: false,
                     },

@@ -14,6 +14,7 @@ async function events(m, {
     try {
         let afk = [...new Set([...(m.mentions || []), ...(m.quoted ? [m.quoted.sender] : [])])]
         for (let jid of afk) {
+            if (m.fromMe) return;
             let is_user = db.list().user[jid].afk
             if (!is_user) continue
             if (!m.isGroup) return

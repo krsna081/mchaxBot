@@ -7,53 +7,35 @@
 • Instagram: krsna081
 */
 
-//© Bentala - Bot
-// • Credits : wa.me/6282258713880 [ Renjana ]
-// • Owner: 6282258713880
-
-/*
-• Telegram: Renjana_ex
-• Instagram: Renjana.ex
-*/
-
-const {
-    execSync
-} = require("child_process");
 const {
     fromBuffer
 } = require("file-type");
-const fs = require("fs");
-const path = require("path");
 const axios = require("axios");
 const {
     writeExif
 } = require(process.cwd() + "/lib/sticker.js");
 
 module.exports = {
-    command: "furbrat",
-    alias: ["hikagen"],
+    command: "animbrat",
+    alias: ["animebrat"],
     category: ["tools"],
     settings: {
         limit: true
     },
-    description: "🐾 Membuat Brat versi furry :v",
+    description: "🐾 Membuat anime versi furry :v",
     async run(m, {
         sock,
         text,
         config,
         Func
     }) {
-        const idMatch = m.args.find(arg => arg.startsWith("--id="));
-        let style = idMatch ? parseInt(idMatch.split("=")[1]) : Func.random([1, 2, 3, 4, 5, 6, 7])
         const isSticker = m.args.includes("--sticker");
         const isAnimated = m.args.includes("--animated");
         const prompt = text.replace(/--\w+(\=\w+)?/g, "").trim();
 
-        if (!prompt) return m.reply(`⚠️ Masukkan teks!\nContoh: *.furbrat Halo Dunia --id=3 --sticker*\n\nOpsi:\n- *--id=<angka>*: Pilih style (1-7, default: random).\n- *--sticker*: Hasilnya jadi stiker.\n- *--animated*: Buat stiker animasi.`);
+        if (!prompt) return m.reply(`⚠️ Masukkan teks!\nContoh: *.animbrat Halo Dunia --sticker*\n\n- *--sticker*: Hasilnya jadi stiker.\n- *--animated*: Buat stiker animasi.`);
 
-        if (isAnimated) style = 1; // Jika animated, pakai style default 1
-
-        const apiUrl = `https://fastrestapis.fasturl.cloud/maker/furbrat?text=${encodeURIComponent(prompt)}&style=${style}&position=center&mode=${isAnimated ? "animated" : "image"}`;
+        const apiUrl = `https://fastrestapis.fasturl.cloud/maker/animbrat?text=${encodeURIComponent(prompt)}&mode=${isAnimated ? "animated" : "image"}`;
         m.reply(`⏳ Mohon tunggu, ${isAnimated ? "stiker animasi" : "gambar"} sedang dibuat...`);
 
         try {
@@ -88,7 +70,7 @@ module.exports = {
             } else {
                 await sock.sendMessage(m.cht, {
                     image: data,
-                    caption: `🐾 Furbrat Style ${style}`
+                    caption: ``
                 }, {
                     quoted: m
                 });

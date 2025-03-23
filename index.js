@@ -127,11 +127,11 @@
     const sock = simple(
       {
         logger: pino({ level: "silent" }),
-        printQRInTerminal: false,
+        printQRInTerminal: true,
         auth: state,
         cachedGroupMetadata: async (jid) => groupCache.get(jid),
-        version: [2, 3000, 1019441105],
-        browser: Browsers.ubuntu("Edge"),
+        browser: ["Ubuntu", "Chrome", "20.0.04"], 
+        version: [ 2, 3000, 1015901307 ],
         getMessage: async (key) => {
           const jid = jidNormalizedUser(key.remoteJid);
           const msg = await store.loadMessage(jid, key.id);

@@ -70,7 +70,7 @@ class Command {
         throw `Masukan pesan untuk di buat sticker!`;
     }
     
-    let txt = text ? text : typeof q.text == 'string' ? q.text : '';
+    let txt = text ? text : typeof q.text == 'string' ? q.body : '';
     const img = await q.download?.();
     const pp = await sock
         .profilePictureUrl(q.sender, "image")
@@ -101,7 +101,7 @@ class Command {
     };
 
     const json = await axios.post(
-        "https://quotly.netorare.codes/generate",
+        "https://qc.botcahx.eu.org/generate",
         obj, {
             headers: {
                 "Content-Type": "application/json"

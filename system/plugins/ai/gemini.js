@@ -7,17 +7,14 @@
 • Instagram: krsna081
 */
 
-const fs = require("fs");
 const axios = require("axios");
-const FormData = require("form-data");
-const { fromBuffer } = require("file-type");
 
 module.exports = {
   command: "gemini",
-  alias: [],
+  alias: ["gm"],
   category: ["ai"],
   description: "Chat dgn gemini",
-  async run(m, { text }) {
+  async run(m, { text, Uploader }) {
     if (!m.text) return m.reply("> mana m.textnya?");
     m.react("🕐");
     let q = m.quoted ? m.quoted : m;
@@ -27,26 +24,15 @@ module.exports = {
         /application\/pdf/.test(q.msg.mimetype)
       ) {
         let media = await q.download();
-        const { ext } = await fromBuffer(media);
-        const filename = `./file_${Date.now()}.${ext}`;
-        fs.writeFileSync(filename, media);
-        const formData = new FormData();
-        formData.append("content", text);
-        formData.append("model", "gemini-1.5-flash");
-        formData.append("file", fs.createReadStream(filename));
-        const { data } = await axios.post("https://hydrooo.web.id/", formData);
-        fs.unlinkSync(filename);
+        let url = await Uploader.catbox(media);
+        const { data } = await axios.get(`https://api.hiuraa.my.id/ai/gemini-advanced?text=${text}&_mediaUrl=${url}&sessionid=${m.sender}`);
         m.reply(data.result);
       } else {
-        const formData = new FormData();
-        formData.append("content", text);
-        formData.append("model", "gemini-1.5-flash");
-        const { data } = await axios.post("https://hydrooo.web.id/", formData);
+        const { data } = await axios.get(`https://api.hiuraa.my.id/ai/gemini-advanced?text=${text}&_mediaUrl=&sessionid=${m.sender}`);
         m.reply(data.result);
       }
     } catch (err) {
-      console.log(err);
-      m.reply(`Error dikit ga ngaruh`);
+      throw err;
     }
   },
 };

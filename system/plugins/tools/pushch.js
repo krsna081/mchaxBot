@@ -7,17 +7,12 @@
 • Instagram: krsna081
 */
 
-const ya = require("js-beautify")
 const {
     writeExif,
-    videoToWebp
 } = require(process.cwd() + "/lib/sticker");
 const pkg = require(process.cwd() + "/package");
 let yukio = async (m, {
     sock,
-    client,
-    conn,
-    DekuGanz,
     Func,
     Scraper,
     text,

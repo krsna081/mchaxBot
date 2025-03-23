@@ -19,7 +19,7 @@ let deku = async (m, {
 
     // Gagal get video/image
     const tw = await Scraper.twitter(text);
-    if (!tw || (!tw.images.length && !tw.videos.length)) return m.reply('Error Kabeh Gada Link Vt Nya 😂');
+    if (!tw) return m.reply('Error Kabeh Gada Link Vt Nya 😂');
 
     // image
     if (tw.type === "image") {

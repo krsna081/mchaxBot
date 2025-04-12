@@ -63,31 +63,6 @@ module.exports = async (m, sock, store) => {
         db.list().user[m.sender].rpg.exp += Math.floor(Math.random() * 20) + 1;
     }
 
-    if (db.list().settings.private && isCmd && !m.fromMe && !m.isOwner && !isPrems && !m.isGroup) {
-        await m.reply(`Kami mohon maaf, tetapi bot saat ini hanya dapat diakses dalam grup. Jika Anda ingin menggunakan bot secara pribadi, silakan tingkatkan status Anda. Jika Anda tertarik, silakan hubungi pemilik kami di bawah ini:\n\n${config.owner.map((a, i) => `> - *Contact ${i + 1} :* wa.me/` + a).join("\n")}`);
-        return;
-    }
-
-    if (isCmd && !(await sock.groupMetadata(config.id.group)).participants.map(a => a.id).includes(m.sender) && !isPrems && !m.isOwner) {
-        let cap = `Sebelum mengakses fitur [ ${m.prefix + m.command} ], silahkan bergabung dengan komunitas MchaX-Bot untuk mendapatkan akses penuh ke bot ini dan fitur-fitur lainnya.\n\n*– Bergabung Sekarang:*\nhttps://chat.whatsapp.com/Kk4OfajNSAQB6Oq3LrKF41`
-        sock.sendMessage(
-            m.cht, {
-                text: cap,
-                contextInfo: {
-                    externalAdReply: {
-                        title: await (await sock.groupMetadata(config.id.group)).subject,
-                        sourceUrl: "https://chat.whatsapp.com/Kk4OfajNSAQB6Oq3LrKF41",
-                        thumbnailUrl: await sock.profilePictureUrl(config.id.group, 'image').catch(_ => null),
-                        mediaType: 1,
-                        renderLargerThumbnail: false,
-                    },
-                },
-            }, {
-                quoted: m
-            },
-        );
-        return
-    }
 
     if (isCmd) {
         require("./case.js")(m,
@@ -144,6 +119,35 @@ module.exports = async (m, sock, store) => {
                 m.command.toLowerCase() === plugin.command ||
                 plugin?.alias?.includes(m.command.toLowerCase()) :
                 "";
+
+    if (db.list().settings.private && cmd && !m.fromMe && !m.isOwner && !isPrems && !m.isGroup) {
+    let caption = `*– Bot tidak dapat diakses di private chat*\n
+> Maaf Hanya pengguna premium saja yang dapat mengakses fitur di Private bot jika kamu melihat pesan ini berarti kamu hanya pengguna gratis\n
+> Tapi tenang kamu masih bisa akses bot ini di Komunitas MchaX-Bot\n
+> Kamu dapat akses fitur downloader, game, play, ai, dan lain lain sekarang jika bergabung 
+
+*– Bergabung sekarang :*
+https://chat.whatsapp.com/${(await sock.groupInviteCode(config.id.group))}
+
+*– Jika anda ingin membeli premium kontak owner :*
+${config.owner.map((a, i) => `*• Kontak ${i + 1} :* wa.me/` + a).join("\n")}
+`;
+    await m.reply(caption);
+        return;
+    }
+
+    if (cmd && !(await sock.groupMetadata(config.id.group)).participants.map(a => a.id).includes(m.sender) &&  !isPrems && !m.isOwner) {
+    let caption = `*– Sepertnya Kamu belum menjadi member*\n
+Sebelum mengakses fitur *[ ${m.command} ]* Silahkan bergabung ke komunitas MchaX-Bot agar dapat mengakses bot ini lebih lanjut 
+
+Setelah bergabung kamu dapat akses fitur bot ini kembali
+
+*– Bergabung Sekarang :*
+https://chat.whatsapp.com/${(await sock.groupInviteCode(config.id.group))}`;
+    await m.reply(caption);
+        return
+    }
+                    
             if (cmd) {
                 if (plugin.loading) {
                     m.react("🕐");

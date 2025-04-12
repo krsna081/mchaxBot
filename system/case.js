@@ -82,6 +82,20 @@ module.exports = async (m,
     const quoted = m.isQuoted ? m.quoted : m;
     try {
         switch (m.command) {
+            case "reactch": {
+                if (!m.isOwner) return reply(config.messages.owner)
+                if (!text) return m.reply(`Gunakan seperti ini: ${m.prefix + m.command} https://whatsapp.com/channel/0029VaVVfbXAojZ2ityrJp1n/7466 😂😂😂😂`);
+                const match = text.match(/https:\/\/whatsapp\.com\/channel\/(\w+)(?:\/(\d+))?/);
+                if (!match) return m.reply("URL tidak valid. Silakan periksa kembali.");
+                const channelId = match[1];
+                const chatId = match[2];
+                if (!chatId) return m.reply("ID chat tidak ditemukan dalam link yang diberikan.");
+                mchax.newsletterMetadata("invite", channelId).then(data => {
+                    if (!data) return m.reply("Newsletter tidak ditemukan atau terjadi kesalahan.");
+                    mchax.newsletterReactMessage(data.id, chatId, text.split(" ").slice(1).join(" ") || "😀");
+                });
+            }
+            break;        
             case "bass":
             case "blown":
             case "deep":

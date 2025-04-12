@@ -53,7 +53,7 @@ module.exports = {
 
         if (isAnimated) style = 1; // Jika animated, pakai style default 1
 
-        const apiUrl = `https://fastrestapis.fasturl.cloud/maker/furbrat?text=${encodeURIComponent(prompt)}&style=${style}&position=center&mode=${isAnimated ? "animated" : "image"}`;
+        const apiUrl = `https://restapi.krizz.my.id/maker/furbrat?text=${encodeURIComponent(prompt)}&style=${style}&mode=${isAnimated ? "animated" : "image"}`;
         m.reply(`⏳ Mohon tunggu, ${isAnimated ? "stiker animasi" : "gambar"} sedang dibuat...`);
 
         try {

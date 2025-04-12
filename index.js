@@ -41,10 +41,13 @@
   const Queque = require("./lib/queque.js");
   const messageQueue = new Queque();
   const Database = require("./lib/database.js");
+  const APIManager = require("./lib/api.js");
+  const MsgHelper = require("./lib/msg.js");
   const append = require("./lib/append");
   const serialize = require("./lib/serialize.js");
   const akses = require("./lib/akses.js");
   const config = require("./settings.js");
+  const canvafy  = require("canvafy");
   const {
      jadibot,
      stopjadibot,
@@ -84,6 +87,9 @@
   };
   global.db = new Database(config.database + ".json");
   await db.init();
+  
+  global.MsgHelper = MsgHelper;
+  global.api = new APIManager();
 
   global.pg = new (await require(process.cwd() + "/lib/plugins"))(
     process.cwd() + "/system/plugins",
@@ -105,7 +111,6 @@
   global.fs = fs;
   global.cheerio = require("cheerio");
   global.block_message = new Set();
-  global.lastCall = new Map();
   global.groupCache = new NodeCache({stdTTL: 5 * 60, useClones: false});
   global.pickRandom = function pickRandom(list) {
      return list[Math.floor(Math.random() * list.length)];
@@ -253,30 +258,8 @@
                     }
                 })();
              }
-         }
-      }          
-      setInterval(async () => {
-           if (!fs.existsSync(sessionPath)) return;
-           let deletedFiles = [];
-           fs.readdirSync(sessionPath).forEach(file => {
-               if (file === 'creds.json' || file.startsWith('app-state')) return;
-               const filePath = path.join(sessionPath, file);
-               try {
-                 fs.unlinkSync(filePath);
-                 deletedFiles.push(file);
-               } catch (err) {
-                  console.error(`Gagal menghapus ${file}:`, err);
-               }
-           });
-
-           if (deletedFiles.length > 0) {
-               for (let owner of config.owner) {
-                   sock.sendMessage(owner + "@s.whatsapp.net", {
-                       text: `♻️ *Auto Clear Session*\n> - *Jumlah sessions yang dihapus:* ${deletedFiles.length}`,
-                   }, { quoted: config.quoted.fkontak });
-               }
-           }
-        }, 60 * 60 * 1000);
+          }
+        }
       }
     });
 
@@ -316,37 +299,161 @@
       }
     });
 
-    sock.ev.on("group-participants.update", ({ id, participants, action }) => {
-      const metadata = sock.groupMetadata[id];
-      groupCache.set(id, metadata);
-      if (metadata) {
-        switch (action) {
-          case "add":
-          case "revoked_membership_requests":
-            metadata.participants.push(
-              ...participants.map((id) => ({
-                id: jidNormalizedUser(id),
-                admin: null,
-              })),
-            );
-            break;
-          case "demote":
-          case "promote":
-            for (const participant of metadata.participants) {
-              let id = jidNormalizedUser(participant.id);
-              if (participants.includes(id)) {
-                participant.admin = action === "promote" ? "admin" : null;
-              }
-            }
-            break;
-          case "remove":
-            metadata.participants = metadata.participants.filter(
-              (p) => !participants.includes(jidNormalizedUser(p.id)),
-            );
-            break;
+  sock.ev.on("group-participants.update", async (groupUpdate) => {
+    try {
+      let groupMetadata = await sock.groupMetadata(groupUpdate.id);
+      let participants = groupUpdate.participants;
+      let totalMembers = groupMetadata.participants.length;
+
+      for (let participant of participants) {
+        try {
+          userProfilePicture = await sock.profilePictureUrl(
+            participant,
+            "image",
+          );
+        } catch (err) {
+          userProfilePicture =
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60";
+        }
+
+        try {
+          groupProfilePicture = await sock.profilePictureUrl(
+            groupUpdate.id,
+            "image",
+          );
+        } catch (err) {
+          groupProfilePicture =
+            "https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60";
+        }
+
+        const welcomeImageBuffer = await Func.fetchBuffer(userProfilePicture);
+        const goodbyeImageBuffer = await Func.fetchBuffer(userProfilePicture);
+        const demoteImageBuffer = await Func.fetchBuffer(userProfilePicture);
+        const promoteImageBuffer = await Func.fetchBuffer(userProfilePicture);
+
+        if (groupUpdate.action === "add" && db.list().group[groupUpdate.id]?.action) {
+          const welcomeCanvas = await new canvafy.WelcomeLeave()
+            .setAvatar(welcomeImageBuffer)
+            .setBackground("image", "https://e.top4top.io/p_31964qbk71.jpg")
+            .setTitle("W e l c o m e")
+            .setDescription(`Welcome to - ${groupMetadata.subject}`)
+            .setBorder("#2a2e35")
+            .setAvatarBorder("#2a2e35")
+            .setOverlayOpacity(0.5)
+            .build();
+
+          const welcomeMessage = `Halloo @${participant.split("@")[0]}👋\nSelamat datang di ${groupMetadata.subject}\n\n> Pastikan untuk selalu membaca peraturan grup.`;
+
+          sock.sendMessage(groupUpdate.id, {
+            image: welcomeCanvas,
+            caption: welcomeMessage,
+            contextInfo: {
+              mentionedJid: [participant],
+              forwardingScore: 9999,
+              isForwarded: true,
+              forwardedNewsletterMessageInfo: {
+                newsletterJid: config.id.newsletter,
+                serverMessageId: 20,
+                newsletterName: "MchaX | Playground",
+              },
+            },
+          });
+        } else if (
+          groupUpdate.action === "remove" &&
+          db.list().group[groupUpdate.id]?.action
+        ) {
+          const goodbyeCanvas = await new canvafy.WelcomeLeave()
+            .setAvatar(goodbyeImageBuffer)
+            .setBackground("image", "https://e.top4top.io/p_31964qbk71.jpg")
+            .setTitle("G o o d b y e")
+            .setDescription(`Goodbye member ke - ${totalMembers}`)
+            .setBorder("#2a2e35")
+            .setAvatarBorder("#2a2e35")
+            .setOverlayOpacity(0.5)
+            .build();
+
+          const goodbyeMessage = `Selamat tinggal @${participant.split("@")[0]} 👋\n\n> Terimakasih telah menjadi anggota disini.`;
+
+          sock.sendMessage(groupUpdate.id, {
+            image: goodbyeCanvas,
+            caption: goodbyeMessage,
+            contextInfo: {
+              mentionedJid: [participant],
+              forwardingScore: 9999,
+              isForwarded: true,
+              forwardedNewsletterMessageInfo: {
+                newsletterJid: config.id.newsletter,
+                serverMessageId: 20,
+                newsletterName: "MchaX | Playground",
+              },
+            },
+          });
+        } else if (
+          groupUpdate.action === "promote" &&
+          db.list().group[groupUpdate.id]?.action
+        ) {
+          const promoteCanvas = await new canvafy.WelcomeLeave()
+            .setAvatar(promoteImageBuffer)
+            .setBackground("image", "https://e.top4top.io/p_31964qbk71.jpg")
+            .setTitle("P r o m o t e")
+            .setDescription(`Selamat!`)
+            .setBorder("#2a2e35")
+            .setAvatarBorder("#2a2e35")
+            .setOverlayOpacity(0.5)
+            .build();
+
+          const promoteMessage = `Selamat @${participant.split("@")[0]} !!\n\n> Anda telah dipromosikan menjadi Admin Group.`;
+
+          sock.sendMessage(groupUpdate.id, {
+            image: promoteCanvas,
+            caption: promoteMessage,
+            contextInfo: {
+              mentionedJid: [participant],
+              forwardingScore: 9999,
+              isForwarded: true,
+              forwardedNewsletterMessageInfo: {
+                newsletterJid: config.id.newsletter,
+                serverMessageId: 20,
+                newsletterName: "MchaX | Playground",
+              },
+            },
+          });
+        }  else if (
+          groupUpdate.action === "demote" &&
+          db.list().group[groupUpdate.id]?.action
+        ) {
+          const demoteCanvas = await new canvafy.WelcomeLeave()
+            .setAvatar(demoteImageBuffer)
+            .setBackground("image", "https://e.top4top.io/p_31964qbk71.jpg")
+            .setTitle("D e m o t e")
+            .setDescription(`Terimakasih`)
+            .setBorder("#2a2e35")
+            .setAvatarBorder("#2a2e35")
+            .setOverlayOpacity(0.5)
+            .build();
+
+          const demoteMessage = `Terimakasih @${participant.split("@")[0]} !!\n\n> Termakasih telah menjadi bagian admin di group ini.`;
+
+          sock.sendMessage(groupUpdate.id, {
+            image: demoteCanvas,
+            caption: demoteMessage,
+            contextInfo: {
+              mentionedJid: [participant],
+              forwardingScore: 9999,
+              isForwarded: true,
+              forwardedNewsletterMessageInfo: {
+                newsletterJid: config.id.newsletter,
+                serverMessageId: 20,
+                newsletterName: "MchaX | Playground",
+              },
+            },
+          });
         }
       }
-    });
+    } catch (err) {
+      console.log(err);
+    }
+  });
     
     sock.ev.on('presence.update', (m) => {
        if (!m) return
@@ -374,6 +481,7 @@
       };
     }
 
+    let lastCall = new Map();
     sock.ev.on("call", async (calls) => {
       if (!db.list().settings.anticall) return;
       for (const call of calls) {

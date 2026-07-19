@@ -11,7 +11,7 @@ const fs = require("node:fs");
 
 const config = {
   owner: [
-    "6281235807940"
+    "628xxxx"
   ],
   name: "© MchaX-Bot - Simple WhatsApp bot by K For Krisnoll",
   sessions: "sessions",
@@ -27,8 +27,8 @@ const config = {
     author: "🐾 K For Krisnoll 🐾"
   },
   id: {
-    newsletter: "120363218091403108@newsletter",
-    group: "120363361348319166@g.us"
+    newsletter: "120363xxxx@newsletter",
+    group: "12036xxxx@g.us"
   },
   cpanel: {
     domain: "https://example.com",
